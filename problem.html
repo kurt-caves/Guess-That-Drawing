@@ -1,1 +1,29 @@
-<h1>Problem.html</h1>
+<p>Problem Statement</p>
+<h1>Introduction</h1>
+<h2>Purpose of Product</h2>
+<p>The purpose of this project is to develop a Unity based multiplayer game incorporating two separate roles: host and audience. The host draws an object, while the audience uses a chat box to deduce what the drawing depicts. The game is targeted towards young adults and aims to challenge players' abilities in object recognition and artistic ability while having fun competing online.&nbsp;</p>
+<h2>Scope of Product</h2>
+<p>Our proposed game includes several key features, including an online lobby where players can either join or host a game, a drawing board with a pen and eraser tool for the host and a chatbox for players to guess the drawing and possibly engage in conversation during gameplay. To keep the gameplay competitive a countdown timer and a point system will be integral. Additionally the game will provide a word bank of drawing prompts as well as a reporting mechanism for uncooperative or abusive players.</p>
+<p>The proposed game does not include artificial intelligence (AI) for either the host or the audience to generate or guess drawings. Communication in our game will be limited to text based chat discluding voice chat, emojis and file uploads.</p>
+<h2>Acronyms, Abbreviations, Definitions</h2>
+<ol>
+<li>Unity: A cross-platform game engine used for building real-time 3D and 2D assets/projects across many different industries.</li>
+<li>Multiplayer: Refers to games that are played by more than one person simultaneously.</li>
+<li>Chatbox: Text based communication for multiple players.</li>
+<li>Word bank: A set of words that are pre selected for the host to choose from.</li>
+<li>Drawer: The initial host of the game and also the singular role of drawing objects for the audience to guess.</li>
+<li>Audience: The users who join a hosted game and guess what is being drawn by the host.</li>
+</ol>
+<h2>References</h2>
+<ol>
+<li>Unity Technologies. Unity User Manual: Getting Started. Unity, Unity Technologies, 2021,<a href="https://docs.unity3d.com/Manual/index.html" target="_blank" rel="noopener"> https://docs.unity3d.com/Manual/index.html</a>.</li>
+<li>Unity Technologies. &ldquo;GUI Scripting in Unity.&rdquo; Unity, Unity Technologies, 2021,<a href="https://docs.unity3d.com/ScriptReference/GUI.html" target="_blank" rel="noopener"> https://docs.unity3d.com/ScriptReference/GUI.html</a>.</li>
+<li>Unity Technologies. &ldquo;Building WebGL Projects.&rdquo; Unity, Unity Technologies, 2021,<a href="https://docs.unity3d.com/Manual/webgl-building.html" target="_blank" rel="noopener"> https://docs.unity3d.com/Manual/webgl-building.html</a>.</li>
+</ol>
+<h1>General Description of Product</h1>
+<h2>Context of Product</h2>
+<p>Our game will be a Unity based Chrome and Firefox compatible multiplayer game hosted on simmer.io. The game will allow users to host a game or join a game that is already being hosted. The host of the game serves as the drawer and the other users as the audience, as the game progresses the role of the drawer cycles through the audience in the order that they joined the game. If a host leaves before the game is finished or is booted due to complaints the next host is assigned in the same manner.&nbsp;</p>
+<p>Each game will be timed and points will be awarded based on correctly guessing the drawing in a timely manner. Players in the audience will also be subject to the same reporting mechanism as the host.&nbsp;</p>
+<h2>Domain Model</h2>
+<p>Our domain model will consist of a player class defined as host or audience, game server, the canvas or drawing board, the chat system and the scoring system. The player class will have attributes, name, email, score and password. The host for the game shares a server for other players to join. The drawing board class will contain three attributes,&nbsp; title, difficulty and image. The image attribute will store a png of the canvas.</p>
+<p>The game server class will consist of players, status of players, and the canvas. The status is used to indicate whether the game room is currently waiting for players, in progress, or finished. The canvas attribute is a reference to the drawing that is currently being guessed. The score class contains an integer based score attribute to represent a score achieved by players and a reference to each player.</p>
