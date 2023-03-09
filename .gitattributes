@@ -1,0 +1,4 @@
+*.cs filter=lfs diff=lfs merge=lfs -text
+/Assets filter=lfs diff=lfs merge=lfs -text
+Packages/ filter=lfs diff=lfs merge=lfs -text
+ProjectSettings/ filter=lfs diff=lfs merge=lfs -text

@@ -1,24 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-
-public class Authenticate : MonoBehaviour {
-
-
-    [SerializeField] private Button AuthenticateButton;
-
-
-    private void Awake() {
-        AuthenticateButton.onClick.AddListener(() => {
-            TestLobby.Instance.Authenticate(EditPlayerName.Instance.GetPlayerName());
-            Hide();
-            LobbySetup.Instance.Show();
-        });
-    }
-
-    private void Hide() {
-        gameObject.SetActive(false);
-    }
-
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:adc923b9ad1e8831ff60faf0c9f2e33c7f44b7d7c4709467179f3f3b35ffeac8
+size 525
