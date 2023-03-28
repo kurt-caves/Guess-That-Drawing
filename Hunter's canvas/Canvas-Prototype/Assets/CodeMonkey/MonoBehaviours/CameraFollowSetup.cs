@@ -1,3 +1,37 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:03d68112fa2fba8d97c9b6afbe9dfd7a80166983bc7f2373123eb34688c6b970
-size 1164
+﻿/* 
+    ------------------- Code Monkey -------------------
+    
+    Thank you for downloading the Code Monkey Utilities
+    I hope you find them useful in your projects
+    If you have any questions use the contact form
+    Cheers!
+
+               unitycodemonkey.com
+    --------------------------------------------------
+ */
+ 
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace CodeMonkey.MonoBehaviours {
+
+    /*
+     * Easy set up for CameraFollow, it will follow the transform with zoom
+     * */
+    public class CameraFollowSetup : MonoBehaviour {
+
+        [SerializeField] private CameraFollow cameraFollow = null;
+        [SerializeField] private Transform followTransform = null;
+        [SerializeField] private float zoom = 50f;
+
+        private void Start() {
+            if (followTransform == null) {
+                Debug.LogError("followTransform is null! Intended?");
+                cameraFollow.Setup(() => Vector3.zero, () => zoom, true, true);
+            } else {
+                cameraFollow.Setup(() => followTransform.position, () => zoom, true, true);
+            }
+        }
+    }
+
+}
