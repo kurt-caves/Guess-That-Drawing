@@ -14,7 +14,8 @@ public class PixelArtDrawingSystem : MonoBehaviour
     [SerializeField] private PixelArtDrawingSystemVisual pixelArtDrawingSystemVisual;
     [SerializeField] private Texture2D colorTexture2D;
     private Grid<GridObject> grid;
-    private float CellSize = 1f;
+    private float CellSize = .25f;
+    private string PenType ="Circle";
     private Vector2 colorUV;
 
     
@@ -23,7 +24,7 @@ public class PixelArtDrawingSystem : MonoBehaviour
     {
         Instance = this;
 
-        grid = new Grid<GridObject>(40, 40, CellSize, Vector3.zero, (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
+        grid = new Grid<GridObject>(100, 100, CellSize, Vector3.zero, (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
         colorUV = new Vector2(0, 0);
         
     }
@@ -44,7 +45,39 @@ public class PixelArtDrawingSystem : MonoBehaviour
             
 
             int penSize = GetPenSizeInt();
-            
+            if(PenType=="Square"){
+                for (int i=0; i<4; ++i)
+                {
+                    int ix=1;
+                    int iy=1;
+                    if(i==1) ix=-1;
+                    else if(i==2) iy=-1;
+                    else if(i==3) 
+                    {
+                        ix=-1;
+                        iy=-1;
+                    }
+                    for (int x = 0; (double)x < (((double)penSize)+1.0) / 2.0; x++) {
+                        for (int y = 0; (double)y < (((double)penSize)+1.0) / 2.0; y++) {
+                            Vector3 gridWorldPosition = mousePosition + new Vector3(x*ix, y*iy) * CellSize;
+                            GridObject gridObject = grid.GetGridObject(gridWorldPosition);
+                        
+                            if (gridObject != null) {
+                                gridObject.SetColorUV(colorUV);
+                            }
+                        }
+                    }
+                
+                
+                
+                grid.GetGridObject(mousePosition).SetColorUV(colorUV);
+                } 
+            }
+
+            if(PenType=="Circle"){
+            Vector3 vec = mousePosition;
+            vec.x +=penSize;
+            vec.y +=penSize;
             for (int i=0; i<4; ++i)
             {
                 int ix=1;
@@ -58,25 +91,26 @@ public class PixelArtDrawingSystem : MonoBehaviour
                 }
                 for (int x = 0; (double)x < (((double)penSize)+1.0) / 2.0; x++) {
                     for (int y = 0; (double)y < (((double)penSize)+1.0) / 2.0; y++) {
-                        Vector3 gridWorldPosition = mousePosition + new Vector3(x*ix, y*iy) * CellSize;
-                        GridObject gridObject = grid.GetGridObject(gridWorldPosition);
-                    
-                        if (gridObject != null) {
-                            gridObject.SetColorUV(colorUV);
+
+                        if((x*x+y*y)<=penSize){
+                            Vector3 gridWorldPosition = mousePosition + new Vector3(x*ix, y*iy) * CellSize;
+                            GridObject gridObject = grid.GetGridObject(gridWorldPosition);
+                        
+                            if (gridObject != null) {
+                                gridObject.SetColorUV(colorUV);
+                            }
                         }
                     }
                 }
+            }
+            }
             
-            
-            
-            grid.GetGridObject(mousePosition).SetColorUV(colorUV);
-            }   
         }
 
-        if (Input.GetKeyDown(KeyCode.R)) colorUV = new Vector2(.5f, 1);
-        if (Input.GetKeyDown(KeyCode.T)) colorUV = new Vector2(0, 1);
-        if (Input.GetKeyDown(KeyCode.Y)) colorUV = new Vector2(.3f, 1f);
-        if (Input.GetKeyDown(KeyCode.U)) colorUV = new Vector2(0, 0);
+        if (Input.GetKeyDown(KeyCode.B)) colorUV = new Vector2(.5f, 1);
+        if (Input.GetKeyDown(KeyCode.R)) colorUV = new Vector2(0, 1);
+        if (Input.GetKeyDown(KeyCode.G)) colorUV = new Vector2(.3f, 1f);
+        if (Input.GetKeyDown(KeyCode.W)) colorUV = new Vector2(0, 0);
         
 
     }
@@ -85,7 +119,7 @@ public class PixelArtDrawingSystem : MonoBehaviour
 
     private int GetPenSizeInt() 
     {
-        return 10;
+        return 101;
     }
 
     public class GridObject 
