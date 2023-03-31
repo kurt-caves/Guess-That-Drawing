@@ -1,8 +1,9 @@
+using System.Text.RegularExpressions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CodeMonkey.Utils;
+using CodeMonkey.Utils; 
 
 public class PixelArtDrawingSystem : MonoBehaviour 
 {
@@ -14,8 +15,8 @@ public class PixelArtDrawingSystem : MonoBehaviour
     [SerializeField] private PixelArtDrawingSystemVisual pixelArtDrawingSystemVisual;
     [SerializeField] private Texture2D colorTexture2D;
     private Grid<GridObject> grid;
-    private float CellSize = .25f;
-    private string PenType ="Circle";
+    private float CellSize = .5f;
+    private string PenType ="Circle";//Circle   Square
     private Vector2 colorUV;
 
     
@@ -45,7 +46,7 @@ public class PixelArtDrawingSystem : MonoBehaviour
             
 
             int penSize = GetPenSizeInt();
-            if(PenType=="Square"){
+            if(colorUV == new Vector2(0, 1)){
                 for (int i=0; i<4; ++i)
                 {
                     int ix=1;
@@ -74,14 +75,14 @@ public class PixelArtDrawingSystem : MonoBehaviour
                 } 
             }
 
-            if(PenType=="Circle"){
+            if(colorUV == new Vector2(.5f, 1)){
             Vector3 vec = mousePosition;
             vec.x +=penSize;
             vec.y +=penSize;
             for (int i=0; i<4; ++i)
             {
-                int ix=1;
-                int iy=1;
+                 int ix=1;
+                 int iy=1;
                 if(i==1) ix=-1;
                 else if(i==2) iy=-1;
                 else if(i==3) 
@@ -92,7 +93,39 @@ public class PixelArtDrawingSystem : MonoBehaviour
                 for (int x = 0; (double)x < (((double)penSize)+1.0) / 2.0; x++) {
                     for (int y = 0; (double)y < (((double)penSize)+1.0) / 2.0; y++) {
 
-                        if((x*x+y*y)<=penSize){
+                        if(2.0*Math.PI*(double)penSize+1.0>x*x+y*y)
+                        {
+                            Vector3 gridWorldPosition = mousePosition + new Vector3(x*ix, y*iy) * CellSize;
+                            GridObject gridObject = grid.GetGridObject(gridWorldPosition);
+                        
+                            if (gridObject != null) {
+                                gridObject.SetColorUV(colorUV);
+                            }
+                        }
+                    }
+                }
+            }
+            }
+
+            if(PenType=="StampGrid"){
+            Vector3 vec = mousePosition;// interesting design
+            vec.x +=penSize;
+            vec.y +=penSize;
+            for (int i=0; i<4; ++i)
+            {
+                 int ix=1;
+                 int iy=1;
+                if(i==1) ix=-1;
+                else if(i==2) iy=-1;
+                else if(i==3) 
+                {
+                    ix=-1;
+                    iy=-1;
+                }
+                for (int x = 0; (double)x < (((double)penSize)+1.0) / 2.0; x++) {
+                    for (int y = 0; (double)y < (((double)penSize)+1.0) / 2.0; y++) {
+
+                        if(2.0*Math.PI*(double)penSize>=Math.Sqrt(Math.Sin(x)+Math.Cos(y))){
                             Vector3 gridWorldPosition = mousePosition + new Vector3(x*ix, y*iy) * CellSize;
                             GridObject gridObject = grid.GetGridObject(gridWorldPosition);
                         
@@ -119,7 +152,7 @@ public class PixelArtDrawingSystem : MonoBehaviour
 
     private int GetPenSizeInt() 
     {
-        return 101;
+        return 25;
     }
 
     public class GridObject 
