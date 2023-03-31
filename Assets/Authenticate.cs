@@ -1,3 +1,88 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:adc923b9ad1e8831ff60faf0c9f2e33c7f44b7d7c4709467179f3f3b35ffeac8
-size 525
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+/*
+    Allows player to sign in after entering a user name
+*/
+public class Authenticate : MonoBehaviour {
+
+    public static Authenticate Instance { get; private set; }
+
+    public event EventHandler OnNameChanged;
+
+
+    [SerializeField] private Button AuthenticateButton;
+
+    [SerializeField] private TMPro.TMP_InputField nameBox;
+
+    private string playerName;
+    private int maxNameLength = 16;
+
+    private void Update() {
+        if(nameBox.text != "")
+        {
+
+            EnableButton();
+        }
+        else
+        {
+            DisableButton();
+            if(!nameBox.isFocused && Input.GetKeyDown(KeyCode.Return) )
+                nameBox.ActivateInputField();
+        }
+    }
+
+
+    private void Awake() {
+        Instance = this;
+
+        nameBox.characterLimit = maxNameLength;
+       
+        AuthenticateButton.onClick.AddListener(() => {
+            setUserName();
+            TestLobby.Instance.Authenticate(GetPlayerName());
+            Hide();
+            LobbySetup.Instance.Show();
+        });
+
+        
+        DisableButton();
+    }
+
+    private void Start() {
+        OnNameChanged += EditPlayerName_OnNameChanged;
+    }
+    
+    private void EditPlayerName_OnNameChanged(object sender, EventArgs e) {
+        TestLobby.Instance.UpdatePlayerName(GetPlayerName());
+        EnableButton();
+
+    }
+
+    private void Hide() {
+        gameObject.SetActive(false);
+    }
+
+    public string GetPlayerName() {
+        return playerName;
+    }
+
+    public void DisableButton () {
+       AuthenticateButton.interactable = false;
+    }
+
+     public void EnableButton () {
+       AuthenticateButton.interactable = true;
+    }
+
+    public void setUserName(){
+
+        playerName = nameBox.text;
+        OnNameChanged?.Invoke(this, EventArgs.Empty);
+    }
+    
+}
+
