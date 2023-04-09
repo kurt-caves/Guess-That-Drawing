@@ -16,6 +16,14 @@ public class TestLobby : MonoBehaviour {
 
     public const string KEY_PLAYER_NAME = "PlayerName";
     public const string KEY_START_GAME = "StartGame";
+   
+    
+    private int lobbyCount = 0;
+    private int minPlayers =  2;
+    private int maxPlayers = 6;
+    
+    //private bool _wasDisconnected = false;
+    //private string _previousRelayCode;
    // public const string KEY_GAME_MODE = "GameMode";
     
     public event EventHandler OnLeftLobby;
@@ -52,7 +60,7 @@ public class TestLobby : MonoBehaviour {
     }
 
     private void Update() {
-        //HandleRefreshLobbyList(); // Disabled Auto Refresh for testing with multiple builds
+        HandleRefreshLobbyList(); // Disabled Auto Refresh for testing with multiple builds
         HandleLobbyHeartbeat();
         HandleLobbyPolling();
     }
@@ -131,17 +139,22 @@ public class TestLobby : MonoBehaviour {
                     joinedLobby = null;
                 }
 
-                if (joinedLobby.Data[KEY_START_GAME].Value != "0"){
+                if ((joinedLobby.Data[KEY_START_GAME].Value != "0")){
                     // Start Game!
-                    if(!IsLobbyHost()){ // Lobby Host already joined Relay
+                    if(!IsLobbyHost() && (RelayManager.Instance.getInGame() == false)){ // Lobby Host already joined Relay
                         RelayManager.Instance.JoinRelay(joinedLobby.Data[KEY_START_GAME].Value);
                     }
-                    joinedLobby = null;
+                   // joinedLobby = null;
 
                     OnGameStarted?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
+    }
+    
+
+    public string getPlayerName(){
+        return playerName;
     }
 
     /*
@@ -150,6 +163,21 @@ public class TestLobby : MonoBehaviour {
     public Lobby GetJoinedLobby() {
         return joinedLobby;
     }
+
+    /*
+        Returns max number of players in a lobby
+    */
+    public int GetMaxPlayers() {
+        return maxPlayers;
+    }
+
+     /*
+        Returns minimum number of players needed to start the game
+    */
+    public int GetMinPlayers() {
+        return minPlayers;
+    }
+
 
     /*
         Checks whether a player is the host
@@ -176,10 +204,9 @@ public class TestLobby : MonoBehaviour {
     /*
         Returns player object
     */
-    private Player GetPlayer() {
+    public Player GetPlayer() {
         return new Player(AuthenticationService.Instance.PlayerId, null, new Dictionary<string, PlayerDataObject> {
-            { KEY_PLAYER_NAME, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, playerName) } 
-        
+            { KEY_PLAYER_NAME, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, playerName) }, 
         });
     }
 
@@ -187,7 +214,7 @@ public class TestLobby : MonoBehaviour {
     /*
         Creates a private or public lobby with specified name and max number of players
     */
-    public async void CreateLobby(string lobbyName, int maxPlayers, bool isPrivate) {
+    public async void CreateLobby(string lobbyName, bool isPrivate) {
         Unity.Services.Lobbies.Models.Player player = GetPlayer();
 
         CreateLobbyOptions options = new CreateLobbyOptions {
@@ -209,6 +236,7 @@ public class TestLobby : MonoBehaviour {
 
     /*
         Updates the list of lobbies available to join
+        Returns number of available lobbies
     */
     public async void RefreshLobbyList() {
         try {
@@ -231,12 +259,18 @@ public class TestLobby : MonoBehaviour {
             };
 
             QueryResponse lobbyListQueryResponse = await Lobbies.Instance.QueryLobbiesAsync();
-            Debug.Log("Lobbies found: " + lobbyListQueryResponse.Results.Count);
+            lobbyCount = lobbyListQueryResponse.Results.Count;
             OnLobbyListChanged?.Invoke(this, new OnLobbyListChangedEventArgs { lobbyList = lobbyListQueryResponse.Results });
+            
         } catch (LobbyServiceException e) {
             Debug.Log(e);
         }
     }
+
+    public int GetLobbyCount(){
+        return lobbyCount;
+    }
+
 
     /*
         Allows player to join a private lobby using a code
@@ -315,8 +349,9 @@ public class TestLobby : MonoBehaviour {
     public async void LeaveLobby() {
         if (joinedLobby != null) {
             try {
-                await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId);
 
+                await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId);
+                
                 joinedLobby = null;
 
                 OnLeftLobby?.Invoke(this, EventArgs.Empty);
@@ -325,6 +360,7 @@ public class TestLobby : MonoBehaviour {
             }
         }
     }
+
 
     /*
         Allows host to remove a player from the lobby
