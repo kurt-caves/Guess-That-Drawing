@@ -42,11 +42,6 @@ public class RelayManager : MonoBehaviour
     }
 
 
-public class RelayManager : MonoBehaviour
-{
-    
-    public static RelayManager Instance { get; private set; }
-
     private void Awake() {
         Instance = this;
     }
@@ -75,12 +70,6 @@ public class RelayManager : MonoBehaviour
 
         try{
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(TestLobby.Instance.GetMaxPlayers()); //Create allocation. host + 3 players 
-
-    public async Task<string> CreateRelay() {
-
-        try{
-            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(3); //Create allocation. host + 3 players 
-
 
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId); //Get join code
 
