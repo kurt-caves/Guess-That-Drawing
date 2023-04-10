@@ -41,6 +41,12 @@ public class RelayManager : MonoBehaviour
         OnClientConnectionNotification?.Invoke(clientId, ConnectionStatus.Disconnected);
     }
 
+
+public class RelayManager : MonoBehaviour
+{
+    
+    public static RelayManager Instance { get; private set; }
+
     private void Awake() {
         Instance = this;
     }
@@ -70,6 +76,12 @@ public class RelayManager : MonoBehaviour
         try{
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(TestLobby.Instance.GetMaxPlayers()); //Create allocation. host + 3 players 
 
+    public async Task<string> CreateRelay() {
+
+        try{
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(3); //Create allocation. host + 3 players 
+
+
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId); //Get join code
 
             Debug.Log(joinCode);
@@ -79,7 +91,9 @@ public class RelayManager : MonoBehaviour
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
             NetworkManager.Singleton.StartHost();
+
             _inGame = true;
+
 
             return joinCode;
         } catch(RelayServiceException e) {
@@ -91,6 +105,7 @@ public class RelayManager : MonoBehaviour
 
     public async void JoinRelay(string joinCode) {
         try{
+
             
             Debug.Log("Joining relay with "+ joinCode);
             JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
@@ -101,6 +116,7 @@ public class RelayManager : MonoBehaviour
 
             NetworkManager.Singleton.StartClient();
             _inGame = true;
+
         } catch (RelayServiceException e){
             Debug.Log(e);
         }
@@ -185,6 +201,7 @@ public class RelayManager : MonoBehaviour
         }
     }
 */
+
     
 
    

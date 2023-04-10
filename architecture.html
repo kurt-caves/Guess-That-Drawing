@@ -1,1 +1,20 @@
 <h1>Architecture.html</h1>
+<h2>Game Overview</h2>
+<p>Our goal is to create a multiplayer game using Unity in which one person draws an object, while the other players use a chat box to guess the drawing.</p>
+<h2>Key architectural drivers</h2>
+<ul>
+  <li>Saving the drawings and showing them at the end of the game to all players</li>
+  <li>TeStoring player's scores and showing them at the end of each round</li>
+  <li>Allowing users to guess other players' drawings and receive feedback on their guesses</li>
+  <li>Supporting multiplayer functionality, allowing users to compete against each other in real-time</li>
+  <li>Users will be able to communicate with each other through in-game chat</li>
+  <li>A range of drawing tools and features</li>
+</ul>
+<h2>Architectural Style Choices</h2>
+<ul>
+  <li><h5>Client-Server</h5>The client-server architecture is suitable for online games that require a centralized approach. In this architecture, the client (player) sends requests to the server, and the server processes those requests and responds accordingly. In your game, the server can store the drawings, manage the game logic, and communicate with the clients. The client can request a new drawing to guess, submit their guesses, and receive feedback on their guesses from the server.</li>
+  <li><h5>Publish-Subscribe</h5>The Publish-Subscribe architecture is suitable for games that require real-time updates to multiple players simultaneously. In this architecture, the players (subscribers) subscribe to a specific topic, and the game (publisher) publishes the updates to that topic. For example, when a player submits a guess, the game publishes the guess to all other players. The other players' interfaces can update in real-time to show that a guess has been submitted. In addition, the game can publish the correct answer to all the players when the round is over.</li>
+</ul>
+
+<h2>Client-Server Architecture Diagram</h2>
+<img src="/arch_diagram.png" alt="Architecture Diagram" style="width:500px;height:600px;">
