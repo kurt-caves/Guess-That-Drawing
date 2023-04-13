@@ -169,7 +169,9 @@ public class RelayManager : MonoBehaviour
 
     }
 
-
+    public List<ulong> GetPlayerList(){
+        return m_Players;
+    }
     //added
     /*
     public void Disconnect()
