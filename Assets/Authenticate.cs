@@ -19,7 +19,7 @@ public class Authenticate : MonoBehaviour {
     [SerializeField] private TMPro.TMP_InputField nameBox;
 
     private string playerName;
-    private int maxNameLength = 16;
+    private int maxNameLength = 32;
 
     private void Update() {
         if(nameBox.text != "")
@@ -79,7 +79,7 @@ public class Authenticate : MonoBehaviour {
     }
 
     public void setUserName(){
-
+        
         playerName = nameBox.text;
         OnNameChanged?.Invoke(this, EventArgs.Empty);
     }

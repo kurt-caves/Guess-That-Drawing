@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,10 +7,10 @@ using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LobbyUI : MonoBehaviour {
+public class LobbyWaitingRoom : MonoBehaviour {
 
 
-    public static LobbyUI Instance { get; private set; }
+    public static LobbyWaitingRoom Instance { get; private set; }
 
 
     
@@ -29,26 +30,26 @@ public class LobbyUI : MonoBehaviour {
 
         leaveButton.onClick.AddListener(() => {
             TestLobby.Instance.LeaveLobby();
+            Hide();
+            LobbySetup.Instance.Show();
+
         });
 
         StartButton.onClick.AddListener(() => {
             TestLobby.Instance.StartGame();
+            Hide();
         });
     }
 
     private void Start() {
         TestLobby.Instance.OnJoinedLobby += UpdateLobby_Event;
         TestLobby.Instance.OnJoinedLobbyUpdate += UpdateLobby_Event;
-        //TestLobby.Instance.OnLeftLobby += TestLobby_OnLeftLobby;
-      //  TestLobby.Instance.OnKickedFromLobby += TestLobby_OnLeftLobby;
+       
+        
 
         Hide();
     }
 
-    private void LobbyManager_OnLeftLobby(object sender, System.EventArgs e) {
-        //ClearLobby();
-        Hide();
-    }
 
     private void UpdateLobby_Event(object sender, TestLobby.LobbyEventArgs e) {
         UpdateLobby();
@@ -59,12 +60,35 @@ public class LobbyUI : MonoBehaviour {
     }
 
     private void UpdateLobby(Lobby lobby) {
-    
-        lobbyNameText.text = "Lobby Name: " + lobby.Name;
-        playerCountText.text = "Number of players: " + lobby.Players.Count;
-       
-        Show();
+        if(RelayManager.Instance.getInGame() == true){
+            Hide();
+            InGame.Instance.Show();
+        }
+        
+        if(lobby != null){
+
+            if(lobby.Players.Count < TestLobby.Instance.GetMinPlayers()){
+                DisableButton();
+            }else{
+                EnableButton();
+            }
+
+            if(lobby.HostId == AuthenticationService.Instance.PlayerId){
+                StartButton.gameObject.SetActive(true);
+            }else{
+                StartButton.gameObject.SetActive(false);
+            }
+
+            lobbyNameText.text = "Lobby Name: " + lobby.Name;
+            playerCountText.text = lobby.Players.Count + "/"+ + TestLobby.Instance.GetMinPlayers() + " players needed";
+
+        }
+        
+
+        
+     
     }
+
 
     private void Hide() {
         gameObject.SetActive(false);
@@ -72,6 +96,14 @@ public class LobbyUI : MonoBehaviour {
 
     public void Show() {
         gameObject.SetActive(true);
+    }
+
+    public void DisableButton () {
+       StartButton.interactable = false;
+    }
+
+    public void EnableButton () {
+       StartButton.interactable = true;
     }
 
 }

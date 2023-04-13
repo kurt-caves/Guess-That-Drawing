@@ -7,3 +7,6 @@ https://kurt-caves.github.io/Guess-That-Drawing/
 Our goal is to create a multiplayer guessing game where one person draws an object, while the other players use a chat box to guess what the object is.
 
 Currently, our project contains a simple but functional lobby and chatbox. The lobby allows players to create/join a public server, and the chat box allows for real-time communication within the server. We also started developing a drawing board for players with a variety of tools, including a pen and eraser.
+
+# changes till 4.12.2023:
+We added a word bank to our project. At this level before starting the game there are two buttons. One for selecting a word and the other one to set the time for each round. They do not work now, but when you push the "start game" button, timer will be started.
