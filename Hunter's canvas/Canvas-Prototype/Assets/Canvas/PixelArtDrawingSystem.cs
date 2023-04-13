@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ public class PixelArtDrawingSystem : MonoBehaviour
     [SerializeField] private Texture2D colorTexture2D;
     private Grid<GridObject> grid;
     private float CellSize = .5f;
-    private string PenType ="Circle";//Circle   Square
+    //private string PenType ="Circle";//Circle   Square     Fill
     private Vector2 colorUV;
 
     
@@ -35,6 +34,7 @@ public class PixelArtDrawingSystem : MonoBehaviour
         pixelArtDrawingSystemVisual.SetGrid(grid);
     }
 
+
     private void Update() 
     {
         
@@ -46,7 +46,15 @@ public class PixelArtDrawingSystem : MonoBehaviour
             
 
             int penSize = GetPenSizeInt();
-            if(colorUV == new Vector2(0, 1)){
+
+            if(colorUV == new Vector2(.3f, 1f)){
+                Vector3 gridWorldPositionOrigin = mousePosition;
+                GridObject gridObjectOrigin = grid.GetGridObject(gridWorldPositionOrigin);
+                edgeBucket(mousePosition, gridObjectOrigin.GetColorUV());
+            }
+
+
+            if(colorUV == new Vector2(0, 1)||colorUV == new Vector2(0, 0)){
                 for (int i=0; i<4; ++i)
                 {
                     int ix=1;
@@ -107,36 +115,6 @@ public class PixelArtDrawingSystem : MonoBehaviour
             }
             }
 
-            if(PenType=="StampGrid"){
-            Vector3 vec = mousePosition;// interesting design
-            vec.x +=penSize;
-            vec.y +=penSize;
-            for (int i=0; i<4; ++i)
-            {
-                 int ix=1;
-                 int iy=1;
-                if(i==1) ix=-1;
-                else if(i==2) iy=-1;
-                else if(i==3) 
-                {
-                    ix=-1;
-                    iy=-1;
-                }
-                for (int x = 0; (double)x < (((double)penSize)+1.0) / 2.0; x++) {
-                    for (int y = 0; (double)y < (((double)penSize)+1.0) / 2.0; y++) {
-
-                        if(2.0*Math.PI*(double)penSize>=Math.Sqrt(Math.Sin(x)+Math.Cos(y))){
-                            Vector3 gridWorldPosition = mousePosition + new Vector3(x*ix, y*iy) * CellSize;
-                            GridObject gridObject = grid.GetGridObject(gridWorldPosition);
-                        
-                            if (gridObject != null) {
-                                gridObject.SetColorUV(colorUV);
-                            }
-                        }
-                    }
-                }
-            }
-            }
             
         }
 
@@ -149,15 +127,23 @@ public class PixelArtDrawingSystem : MonoBehaviour
     }
 
 
-
+    public Vector2 GetColorUV() {
+        return colorUV;
+    }
+    public Grid<GridObject> GetGrid() {
+        return grid;
+    }
     private int GetPenSizeInt() 
     {
         return 25;
     }
-
-    public class GridObject 
+    private void SetPenSizeInt() 
     {
+        
+    }
 
+    public class GridObject // *********************************
+    {
         private Grid<GridObject> grid;
         private int x;
         private int y;
@@ -186,6 +172,430 @@ public class PixelArtDrawingSystem : MonoBehaviour
             return ((int)colorUV.x).ToString();
         }
 
+    }
+
+
+
+
+    
+    private void edgeBucket(Vector3 mousePosition, Vector2 colorOrigin){//*********************************************** Fill Bucket
+        if(colorOrigin!=colorUV){
+            Vector3 gridWorldPositionRight = mousePosition;
+            GridObject gridObjectRight = grid.GetGridObject(gridWorldPositionRight);// defines origin
+
+            
+
+        do {// find edge of space
+            if(colorOrigin!=colorUV){
+                      
+                gridObjectRight.SetColorUV(colorUV);
+                grid.GetGridObject(gridWorldPositionRight).SetColorUV(colorUV);//color pixel
+                    
+                gridWorldPositionRight += new Vector3(1, 0) * CellSize;//next pixel
+                gridObjectRight = grid.GetGridObject(gridWorldPositionRight);
+            }
+        }
+        while(gridObjectRight != null && colorOrigin == gridObjectRight.GetColorUV());
+
+
+        Vector3 gridWorldPositionLeft = mousePosition;
+        GridObject gridObjectLeft = grid.GetGridObject(gridWorldPositionLeft);// defines origin
+
+        do{// find edge of space
+            if(colorOrigin!=colorUV){            
+                   gridObjectLeft.SetColorUV(colorUV);
+                   grid.GetGridObject(gridWorldPositionLeft).SetColorUV(colorUV);//color pixel
+
+                gridWorldPositionLeft += new Vector3(-1, 0) * CellSize;//next pixel
+                gridObjectLeft = grid.GetGridObject(gridWorldPositionLeft);
+            }
+        }
+        while(gridObjectLeft != null && colorOrigin == gridObjectLeft.GetColorUV());
+
+        Vector3 gridWorldPositionUp = mousePosition;
+        GridObject gridObjectUp = grid.GetGridObject(gridWorldPositionUp);// defines origin
+
+        do{// find edge of space
+            if(colorOrigin!=colorUV){            
+                   gridObjectUp.SetColorUV(colorUV);
+                   grid.GetGridObject(gridWorldPositionUp).SetColorUV(colorUV);//color pixel
+
+                gridWorldPositionUp += new Vector3(0, 1) * CellSize;//next pixel
+                gridObjectUp = grid.GetGridObject(gridWorldPositionUp);
+            }
+        }
+        while(gridObjectUp != null && colorOrigin == gridObjectUp.GetColorUV());
+
+        Vector3 gridWorldPositionDown = mousePosition;
+        GridObject gridObjectDown = grid.GetGridObject(gridWorldPositionDown);// defines origin
+
+        do{// find edge of space
+            if(colorOrigin!=colorUV){            
+                   gridObjectDown.SetColorUV(colorUV);
+                   grid.GetGridObject(gridWorldPositionDown).SetColorUV(colorUV);//color pixel
+
+                gridWorldPositionDown += new Vector3(0, -1) * CellSize;//next pixel
+                gridObjectDown = grid.GetGridObject(gridWorldPositionDown);
+            }
+        }
+        while(gridObjectDown != null && colorOrigin == gridObjectDown.GetColorUV());
+        gridWorldPositionRight = gridWorldPositionRight + new Vector3(-1, 1) * CellSize;
+        gridWorldPositionLeft = gridWorldPositionLeft + new Vector3(1, -1) * CellSize;
+        gridWorldPositionUp = gridWorldPositionUp + new Vector3(-1, -1) * CellSize;
+        gridWorldPositionDown = gridWorldPositionDown + new Vector3(1, 1) * CellSize;
+        gridObjectRight = grid.GetGridObject(gridWorldPositionRight);
+        gridObjectLeft = grid.GetGridObject(gridWorldPositionLeft);
+        gridObjectUp = grid.GetGridObject(gridWorldPositionUp);
+        gridObjectDown = grid.GetGridObject(gridWorldPositionDown);
+
+        
+
+        edgeBucketWrapRight( gridWorldPositionRight + new Vector3(-1, 1) * CellSize,  colorOrigin, gridWorldPositionUp + new Vector3(1, -1) * CellSize);
+        edgeBucketWrapLeft( gridWorldPositionLeft + new Vector3(1, -1) * CellSize,  colorOrigin, gridWorldPositionDown + new Vector3(-1, 1) * CellSize);
+        edgeBucketWrapUp( gridWorldPositionUp + new Vector3(-1, -1) * CellSize,  colorOrigin, gridWorldPositionLeft + new Vector3(1, 1) * CellSize);
+        edgeBucketWrapDown( gridWorldPositionDown + new Vector3(1, 1) * CellSize,  colorOrigin, gridWorldPositionRight + new Vector3(-1, -1) * CellSize);
+        
+        if(gridWorldPositionRight != null && gridObjectRight.GetColorUV() == colorOrigin){
+        edgeBucket(gridWorldPositionRight + new Vector3(-1, 1) * CellSize, colorOrigin);
+        }
+        if(gridWorldPositionLeft != null && gridObjectLeft.GetColorUV() == colorOrigin){
+        edgeBucket(gridWorldPositionLeft + new Vector3(1, -1) * CellSize, colorOrigin);
+        }
+        if(gridWorldPositionUp != null && gridObjectUp.GetColorUV() == colorOrigin){
+        edgeBucket(gridWorldPositionUp + new Vector3(-1, -1) * CellSize, colorOrigin);
+        }
+        if(gridWorldPositionDown != null && gridObjectDown.GetColorUV() == colorOrigin){
+        edgeBucket(gridWorldPositionDown + new Vector3(1, 1) * CellSize, colorOrigin);
+        }
+         }
+
+    }
+
+
+    private void edgeBucketWrapRight(Vector3 mousePosition, Vector2 colorOrigin, Vector3 edgePoint){
+        if(mousePosition!=edgePoint){
+            
+            Vector3 gridWorldPosition = mousePosition;
+            GridObject gridObject = grid.GetGridObject(gridWorldPosition);
+            
+            if(gridObject != null && gridWorldPosition != edgePoint){
+                
+                if(colorOrigin!=colorUV){
+                    gridObject.SetColorUV(colorUV);
+                    grid.GetGridObject(mousePosition).SetColorUV(colorUV);// color pixel
+                }
+
+                Vector3 gridWorldPositionRight = mousePosition + new Vector3(1, 0) * CellSize;// find right pixel
+                GridObject gridObjectRight = grid.GetGridObject(gridWorldPositionRight);
+                Vector3 gridWorldPositionUp = mousePosition + new Vector3(0, 1) * CellSize;// find up pixel
+                GridObject gridObjectUp = grid.GetGridObject(gridWorldPositionUp);
+                Vector3 gridWorldPositionLeft = mousePosition + new Vector3(-1, 0) * CellSize;// find left pixel
+                GridObject gridObjectLeft = grid.GetGridObject(gridWorldPositionLeft);
+                Vector3 gridWorldPositionDown = mousePosition + new Vector3(0, -1) * CellSize;// find down pixel
+                GridObject gridObjectDown = grid.GetGridObject(gridWorldPositionDown);
+                
+                
+                if(gridWorldPositionRight == edgePoint || (gridObjectRight != null && colorOrigin == gridObjectRight.GetColorUV())){
+                    edgeBucketWrapRight( mousePosition + new Vector3(1, 0) * CellSize,  colorOrigin, edgePoint);// check right
+                }
+                else if(gridWorldPositionUp == edgePoint || (gridObjectUp != null && colorOrigin == gridObjectUp.GetColorUV())){
+                    edgeBucketWrapUp( mousePosition + new Vector3(0, 1) * CellSize,  colorOrigin, edgePoint);// check up
+                }
+                else if(gridWorldPositionLeft == edgePoint || (gridObjectLeft != null && colorOrigin == gridObjectLeft.GetColorUV())){
+                    edgeBucketWrapLeft( mousePosition + new Vector3(-1, 0) * CellSize,  colorOrigin, edgePoint);// check left
+                }
+                else if(gridWorldPositionDown == edgePoint || gridObjectDown != null && colorOrigin == gridObjectDown.GetColorUV()){
+                    edgeBucketWrapDown( mousePosition + new Vector3(0, - 1) * CellSize,  colorOrigin, edgePoint);// check down
+                }
+                
+                
+                
+                gridWorldPosition = mousePosition + new Vector3(0, 1) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketY( mousePosition + new Vector3(0, 1) * CellSize,  colorOrigin);
+                }
+
+                gridWorldPosition = mousePosition + new Vector3(0, -1) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketY( mousePosition + new Vector3(0, -1) * CellSize,  colorOrigin);
+                }
+
+                gridWorldPosition = mousePosition + new Vector3(1, 0) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketX( mousePosition + new Vector3(1, 0) * CellSize,  colorOrigin);
+                }
+
+                gridWorldPosition = mousePosition + new Vector3(-1, 0) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketX( mousePosition + new Vector3(-1, 0) * CellSize,  colorOrigin);
+                }
+                
+                
+                
+                
+            }   
+        }
+    }
+
+
+    private void edgeBucketWrapUp(Vector3 mousePosition, Vector2 colorOrigin, Vector3 edgePoint){
+        if(mousePosition!=edgePoint){
+            
+            Vector3 gridWorldPosition = mousePosition;
+            GridObject gridObject = grid.GetGridObject(gridWorldPosition);
+            
+            if(gridObject != null && gridWorldPosition != edgePoint){
+                
+                if(colorOrigin!=colorUV){
+                    gridObject.SetColorUV(colorUV);
+                    grid.GetGridObject(mousePosition).SetColorUV(colorUV);// color pixel
+                }
+
+                Vector3 gridWorldPositionRight = mousePosition + new Vector3(1, 0) * CellSize;// find right pixel
+                GridObject gridObjectRight = grid.GetGridObject(gridWorldPositionRight);
+                Vector3 gridWorldPositionUp = mousePosition + new Vector3(0, 1) * CellSize;// find up pixel
+                GridObject gridObjectUp = grid.GetGridObject(gridWorldPositionUp);
+                Vector3 gridWorldPositionLeft = mousePosition + new Vector3(-1, 0) * CellSize;// find left pixel
+                GridObject gridObjectLeft = grid.GetGridObject(gridWorldPositionLeft);
+                Vector3 gridWorldPositionDown = mousePosition + new Vector3(0, -1) * CellSize;// find down pixel
+                GridObject gridObjectDown = grid.GetGridObject(gridWorldPositionDown);
+
+                if(gridObjectUp != null && colorOrigin == gridObjectUp.GetColorUV() || gridWorldPositionUp == edgePoint){
+                    edgeBucketWrapUp( gridWorldPositionUp,  colorOrigin, edgePoint);// check up
+                }
+                else if(gridObjectLeft != null && colorOrigin == gridObjectLeft.GetColorUV() || gridWorldPositionLeft == edgePoint){
+                    edgeBucketWrapLeft( gridWorldPositionLeft,  colorOrigin, edgePoint);// check left
+                }
+                else if(gridObjectDown != null && colorOrigin == gridObjectDown.GetColorUV() || gridWorldPositionDown == edgePoint){
+                    edgeBucketWrapDown( gridWorldPositionDown,  colorOrigin, edgePoint);// check down
+                }
+                else if(gridObjectRight != null && colorOrigin == gridObjectRight.GetColorUV() || gridWorldPositionRight == edgePoint){
+                    edgeBucketWrapRight( gridWorldPositionRight,  colorOrigin, edgePoint);// check right
+                }
+                
+                
+                
+                gridWorldPosition = mousePosition + new Vector3(0, 1) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketY( mousePosition + new Vector3(0, 1) * CellSize,  colorOrigin);// fill up
+                }
+
+                gridWorldPosition = mousePosition + new Vector3(0, -1) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketY( mousePosition + new Vector3(0, -1) * CellSize,  colorOrigin);// fill down
+                }
+
+                gridWorldPosition = mousePosition + new Vector3(1, 0) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketX( mousePosition + new Vector3(1, 0) * CellSize,  colorOrigin);// fill right
+                }
+
+                gridWorldPosition = mousePosition + new Vector3(-1, 0) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketX( mousePosition + new Vector3(-1, 0) * CellSize,  colorOrigin);// fill left
+                }
+                
+
+            }
+        }
+    }
+
+    private void edgeBucketWrapLeft(Vector3 mousePosition, Vector2 colorOrigin, Vector3 edgePoint){
+        if(mousePosition!=edgePoint){
+            
+            Vector3 gridWorldPosition = mousePosition;
+            GridObject gridObject = grid.GetGridObject(gridWorldPosition);
+            
+            if(gridObject != null && gridWorldPosition != edgePoint){
+                
+                if(colorOrigin!=colorUV){
+                    gridObject.SetColorUV(colorUV);
+                    grid.GetGridObject(mousePosition).SetColorUV(colorUV);// color pixel
+                }
+
+                Vector3 gridWorldPositionRight = mousePosition + new Vector3(1, 0) * CellSize;// find right pixel
+                GridObject gridObjectRight = grid.GetGridObject(gridWorldPositionRight);
+                Vector3 gridWorldPositionUp = mousePosition + new Vector3(0, 1) * CellSize;// find up pixel
+                GridObject gridObjectUp = grid.GetGridObject(gridWorldPositionUp);
+                Vector3 gridWorldPositionLeft = mousePosition + new Vector3(-1, 0) * CellSize;// find left pixel
+                GridObject gridObjectLeft = grid.GetGridObject(gridWorldPositionLeft);
+                Vector3 gridWorldPositionDown = mousePosition + new Vector3(0, -1) * CellSize;// find down pixel
+                GridObject gridObjectDown = grid.GetGridObject(gridWorldPositionDown);
+                
+                if(gridObjectLeft != null && colorOrigin == gridObjectLeft.GetColorUV() || gridWorldPositionLeft == edgePoint){
+                    edgeBucketWrapLeft( mousePosition + new Vector3(-1, 0) * CellSize,  colorOrigin, edgePoint);// check left
+                }
+                else if(gridObjectDown != null && colorOrigin == gridObjectDown.GetColorUV() || gridWorldPositionDown == edgePoint){
+                    edgeBucketWrapDown( mousePosition + new Vector3(0, - 1) * CellSize,  colorOrigin, edgePoint);// check down
+                }
+                else if(gridObjectRight != null && colorOrigin == gridObjectRight.GetColorUV() || gridWorldPositionRight == edgePoint){
+                    edgeBucketWrapRight( mousePosition + new Vector3(1, 0) * CellSize,  colorOrigin, edgePoint);// check right
+                }
+                else if(gridObjectUp != null && colorOrigin == gridObjectUp.GetColorUV() || gridWorldPositionUp == edgePoint){
+                    edgeBucketWrapUp( mousePosition + new Vector3(0, 1) * CellSize,  colorOrigin, edgePoint);// check up
+                }
+                
+                
+                
+                
+                gridWorldPosition = mousePosition + new Vector3(0, 1) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketY( mousePosition + new Vector3(0, 1) * CellSize,  colorOrigin);
+                }
+
+                gridWorldPosition = mousePosition + new Vector3(0, -1) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketY( mousePosition + new Vector3(0, -1) * CellSize,  colorOrigin);
+                }
+
+                gridWorldPosition = mousePosition + new Vector3(1, 0) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketX( mousePosition + new Vector3(1, 0) * CellSize,  colorOrigin);
+                }
+
+                gridWorldPosition = mousePosition + new Vector3(-1, 0) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketX( mousePosition + new Vector3(-1, 0) * CellSize,  colorOrigin);
+                }
+                
+                
+                
+            }
+        }   
+    }
+
+    private void edgeBucketWrapDown(Vector3 mousePosition, Vector2 colorOrigin, Vector3 edgePoint){
+        if(mousePosition!=edgePoint){
+            
+            Vector3 gridWorldPosition = mousePosition;
+            GridObject gridObject = grid.GetGridObject(gridWorldPosition);
+            
+            if(gridObject != null && gridWorldPosition != edgePoint){
+                
+                if(colorOrigin!=colorUV){
+                    gridObject.SetColorUV(colorUV);
+                    grid.GetGridObject(mousePosition).SetColorUV(colorUV);// color pixel
+                }
+
+                Vector3 gridWorldPositionRight = mousePosition + new Vector3(1, 0) * CellSize;// find right pixel
+                GridObject gridObjectRight = grid.GetGridObject(gridWorldPositionRight);
+                Vector3 gridWorldPositionUp = mousePosition + new Vector3(0, 1) * CellSize;// find up pixel
+                GridObject gridObjectUp = grid.GetGridObject(gridWorldPositionUp);
+                Vector3 gridWorldPositionLeft = mousePosition + new Vector3(-1, 0) * CellSize;// find left pixel
+                GridObject gridObjectLeft = grid.GetGridObject(gridWorldPositionLeft);
+                Vector3 gridWorldPositionDown = mousePosition + new Vector3(0, -1) * CellSize;// find down pixel
+                GridObject gridObjectDown = grid.GetGridObject(gridWorldPositionDown);
+
+                if(gridObjectDown != null && colorOrigin == gridObjectDown.GetColorUV() || gridWorldPositionDown == edgePoint){
+                    edgeBucketWrapDown( gridWorldPositionDown,  colorOrigin, edgePoint);// check down
+                }
+                else if(gridObjectRight != null && colorOrigin == gridObjectRight.GetColorUV() || gridWorldPositionRight == edgePoint){
+                    edgeBucketWrapLeft( gridWorldPositionRight,  colorOrigin, edgePoint);// check right
+                }
+                else if(gridObjectUp != null && colorOrigin == gridObjectUp.GetColorUV() || gridWorldPositionUp == edgePoint){
+                    edgeBucketWrapDown( gridWorldPositionUp,  colorOrigin, edgePoint);// check up
+                }
+                else if(gridObjectLeft != null && colorOrigin == gridObjectLeft.GetColorUV() || gridWorldPositionLeft == edgePoint){
+                    edgeBucketWrapDown( gridWorldPositionLeft,  colorOrigin, edgePoint);// check left
+                }
+                
+                
+                
+                gridWorldPosition = mousePosition + new Vector3(0, 1) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketY( mousePosition + new Vector3(0, 1) * CellSize,  colorOrigin);
+                }
+
+                gridWorldPosition = mousePosition + new Vector3(0, -1) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketY( mousePosition + new Vector3(0, -1) * CellSize,  colorOrigin);
+                }
+
+                gridWorldPosition = mousePosition + new Vector3(1, 0) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketX( mousePosition + new Vector3(1, 0) * CellSize,  colorOrigin);
+                }
+
+                gridWorldPosition = mousePosition + new Vector3(-1, 0) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketX( mousePosition + new Vector3(-1, 0) * CellSize,  colorOrigin);
+                }
+                
+
+            }
+        }
+    }
+
+
+    private void bucketY(Vector3 mousePosition, Vector2 colorOrigin){
+        
+        Vector3 gridWorldPosition = mousePosition;
+        GridObject gridObject = grid.GetGridObject(gridWorldPosition);
+        if (gridObject != null){
+            if(colorOrigin!=colorUV){
+                gridObject.SetColorUV(colorUV);
+                grid.GetGridObject(mousePosition).SetColorUV(colorUV);
+                
+
+                gridWorldPosition = mousePosition + new Vector3(0, 1) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketY( mousePosition + new Vector3(0, 1) * CellSize,  colorOrigin);
+                }
+
+                gridWorldPosition = mousePosition + new Vector3(0, -1) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketY( mousePosition + new Vector3(0, -1) * CellSize,  colorOrigin);
+                }
+
+                
+
+            }
+        }
+    }
+    private void bucketX(Vector3 mousePosition, Vector2 colorOrigin){
+        
+        Vector3 gridWorldPosition = mousePosition;
+        GridObject gridObject = grid.GetGridObject(gridWorldPosition);
+        if (gridObject != null){
+            if(colorOrigin!=colorUV){
+                gridObject.SetColorUV(colorUV);
+                grid.GetGridObject(mousePosition).SetColorUV(colorUV);
+                
+
+                gridWorldPosition = mousePosition + new Vector3(1, 0) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketX( mousePosition + new Vector3(1, 0) * CellSize,  colorOrigin);
+                }
+
+                gridWorldPosition = mousePosition + new Vector3(-1, 0) * CellSize;
+                gridObject = grid.GetGridObject(gridWorldPosition);
+                if(gridObject != null && colorOrigin == gridObject.GetColorUV()){
+                    bucketX( mousePosition + new Vector3(-1, 0) * CellSize,  colorOrigin);
+                }
+
+                
+
+            }
+        }
     }
 
 }
