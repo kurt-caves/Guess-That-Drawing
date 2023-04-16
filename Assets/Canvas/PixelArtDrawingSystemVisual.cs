@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class PixelArtDrawingSystemVisual : MonoBehaviour {
+
+public class PixelArtDrawingSystemVisual : NetworkBehaviour {
 
     [SerializeField] private PixelArtDrawingSystem pixelArtDrawingSystem;
 
@@ -13,10 +15,17 @@ public class PixelArtDrawingSystemVisual : MonoBehaviour {
     private void Awake() {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
+
+        
     }
 
     private void Start() {
-        SetGrid(pixelArtDrawingSystem.GetGrid());
+        
+       //if (pixelArtDrawingSystem != null){
+            SetGrid(pixelArtDrawingSystem.GetGrid());
+
+       // }
+     
     }
 
     public void SetGrid(Grid<PixelArtDrawingSystem.GridObject> grid) {
@@ -53,7 +62,7 @@ public class PixelArtDrawingSystemVisual : MonoBehaviour {
                 MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, grid.GetWorldPosition(x, y) + quadSize * .5f, 0f, quadSize, gridUV00, gridUV11);
             }
         }
-
+       
         mesh.vertices = vertices;
         mesh.uv = uv;
         mesh.triangles = triangles;

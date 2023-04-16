@@ -6,17 +6,26 @@ using Unity.Netcode;
 
 public class GameBehavior : NetworkBehaviour
 {
-
+    /*
     private  NetworkVariable<int> _artistIndex = new NetworkVariable<int>();
-   /*
-    public override void OnNetworkSpawn(){
-        base.OnNetworkSpawn();
-        _artistIndex.OnValueChanged += OnValueChanged;
-    }
-    // Start is called before the first frame update
+    private const int  _startIndex = 0;
 
-    private void OnValueChanged(int myArtistIndex){
-        Debug.Log("The artist is "+myArtistIndex);
+    public override void OnNetworkSpawn(){
+        if (IsServer){
+            _artistIndex.Value = _startIndex;
+           
+        
+        }
+        else{
+            _artistIndex.OnValueChanged += OnSomeValueChanged;
+        }
+        
+    }
+    
+
+    private void OnSomeValueChanged(int previous, int current){
+       // Debug.Log("The artist is "+myArtistIndex);
+        Debug.Log($"Detected NetworkVariable Change: Previous: {previous} | Current: {current}");
     }
 
 
@@ -25,7 +34,7 @@ public class GameBehavior : NetworkBehaviour
         int newIndex = 5;
         
         List<ulong> myPlayers = RelayManager.Instance.GetPlayerList();
-        int newIndex = _artistIndex;
+        //int newIndex = _artistIndex;
         if(newIndex > myPlayers.Count -1){
             newIndex ++;
             
@@ -46,6 +55,6 @@ public class GameBehavior : NetworkBehaviour
     private void OnTurnChangedRpc(int artistIndex){
 
     }
-    */
+   */
 
 }

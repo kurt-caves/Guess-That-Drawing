@@ -448,6 +448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8c42bc73e8a7d54a9ae5580f57a3ba0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pixelArtDrawingSystem: {fileID: 2046360416}
 --- !u!1 &2046360415
 GameObject:
   m_ObjectHideFlags: 0

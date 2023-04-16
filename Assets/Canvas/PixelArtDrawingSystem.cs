@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CodeMonkey.Utils; 
+using Unity.Netcode;
 
-public class PixelArtDrawingSystem : MonoBehaviour 
+public class PixelArtDrawingSystem : NetworkBehaviour 
 {
 
     public static PixelArtDrawingSystem Instance { get; private set; }
@@ -32,20 +33,34 @@ public class PixelArtDrawingSystem : MonoBehaviour
     private void Start() 
     {
         pixelArtDrawingSystemVisual.SetGrid(grid);
+
     }
 
 
     private void Update() 
     {
+        if (Input.GetKeyDown(KeyCode.B)) colorUV = new Vector2(.5f, 1);
+        if (Input.GetKeyDown(KeyCode.R)) colorUV = new Vector2(0, 1);
+        if (Input.GetKeyDown(KeyCode.G)) colorUV = new Vector2(.3f, 1f);
+        if (Input.GetKeyDown(KeyCode.W)) colorUV = new Vector2(0, 0);
         
+
         if (Input.GetMouseButtonDown(0)) 
         {
             Vector3 mousePosition = UtilsClass.GetMouseWorldPosition();
 
-            
-            
 
             int penSize = GetPenSizeInt();
+            
+            //added for multiplayer
+            UpdateDrawingServerRpc(mousePosition, penSize, colorUV, NetworkManager.Singleton.LocalClientId);
+
+
+        }
+    }
+
+    private void UpdateDrawing(Vector3 mousePosition, int penSize, Vector2 colorUV, ulong senderPlayerId) {
+
 
             if(colorUV == new Vector2(.3f, 1f)){
                 Vector3 gridWorldPositionOrigin = mousePosition;
@@ -78,52 +93,60 @@ public class PixelArtDrawingSystem : MonoBehaviour
                     }
                 
                 
+                if(grid.GetGridObject(mousePosition) != null){
+                    grid.GetGridObject(mousePosition).SetColorUV(colorUV);
+                }
                 
-                grid.GetGridObject(mousePosition).SetColorUV(colorUV);
                 } 
             }
 
             if(colorUV == new Vector2(.5f, 1)){
-            Vector3 vec = mousePosition;
-            vec.x +=penSize;
-            vec.y +=penSize;
-            for (int i=0; i<4; ++i)
-            {
-                 int ix=1;
-                 int iy=1;
-                if(i==1) ix=-1;
-                else if(i==2) iy=-1;
-                else if(i==3) 
+                Vector3 vec = mousePosition;
+                vec.x +=penSize;
+                vec.y +=penSize;
+                for (int i=0; i<4; ++i)
                 {
-                    ix=-1;
-                    iy=-1;
-                }
-                for (int x = 0; (double)x < (((double)penSize)+1.0) / 2.0; x++) {
-                    for (int y = 0; (double)y < (((double)penSize)+1.0) / 2.0; y++) {
+                    int ix=1;
+                    int iy=1;
+                    if(i==1) ix=-1;
+                    else if(i==2) iy=-1;
+                    else if(i==3) 
+                    {
+                        ix=-1;
+                        iy=-1;
+                    }
+                    for (int x = 0; (double)x < (((double)penSize)+1.0) / 2.0; x++) {
+                        for (int y = 0; (double)y < (((double)penSize)+1.0) / 2.0; y++) {
 
-                        if(2.0*Math.PI*(double)penSize+1.0>x*x+y*y)
-                        {
-                            Vector3 gridWorldPosition = mousePosition + new Vector3(x*ix, y*iy) * CellSize;
-                            GridObject gridObject = grid.GetGridObject(gridWorldPosition);
+                            if(2.0*Math.PI*(double)penSize+1.0>x*x+y*y)
+                            {
+                                Vector3 gridWorldPosition = mousePosition + new Vector3(x*ix, y*iy) * CellSize;
+                                GridObject gridObject = grid.GetGridObject(gridWorldPosition);
                         
-                            if (gridObject != null) {
-                                gridObject.SetColorUV(colorUV);
+                                if (gridObject != null) {
+                                    gridObject.SetColorUV(colorUV);
+                                }
                             }
                         }
                     }
-                }
             }
             }
 
-            
-        }
 
-        if (Input.GetKeyDown(KeyCode.B)) colorUV = new Vector2(.5f, 1);
-        if (Input.GetKeyDown(KeyCode.R)) colorUV = new Vector2(0, 1);
-        if (Input.GetKeyDown(KeyCode.G)) colorUV = new Vector2(.3f, 1f);
-        if (Input.GetKeyDown(KeyCode.W)) colorUV = new Vector2(0, 0);
         
+    }
 
+    //added for multiplayer
+    [ClientRpc]
+    private void ReceiveUpdateDrawingClientRpc(Vector3 mousePosition,  int penSize, Vector2 colorUV, ulong senderPlayerId) {
+        UpdateDrawing(mousePosition, penSize, colorUV, senderPlayerId);
+        
+    }
+
+    //added for multiplayer
+    [ServerRpc(RequireOwnership = false)]
+    private void UpdateDrawingServerRpc(Vector3 mousePosition,  int penSize, Vector2 colorUV, ulong senderPlayerId) {
+        ReceiveUpdateDrawingClientRpc(mousePosition, penSize, colorUV,  senderPlayerId);
     }
 
 

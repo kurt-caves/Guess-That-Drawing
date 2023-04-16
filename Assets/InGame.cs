@@ -9,7 +9,7 @@ public class InGame : MonoBehaviour
 {
     public static InGame Instance { get; private set; }
 
-    //[SerializeField] private Button ExitButton;
+    [SerializeField] private Button WordBankButton;
    
     
      private void Start() {
@@ -24,7 +24,7 @@ public class InGame : MonoBehaviour
     {
         Instance = this;
         /*
-        ExitButton.onClick.AddListener(() => {
+        WordBankButton.onClick.AddListener(() => {
                 
             //added
             if (RelayManager.Instance != null){
@@ -35,9 +35,9 @@ public class InGame : MonoBehaviour
             Hide();
             LobbySetup.Instance.Show();
         });
-
+*/
         Hide();
-        */
+        
     }
     
 
