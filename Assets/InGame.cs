@@ -10,6 +10,7 @@ public class InGame : MonoBehaviour
     public static InGame Instance { get; private set; }
 
     [SerializeField] private Button WordBankButton;
+    [SerializeField] private TextMeshProUGUI WordToDrawText;
    
     
      private void Start() {
@@ -23,21 +24,12 @@ public class InGame : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        /*
-        WordBankButton.onClick.AddListener(() => {
-                
-            //added
-            if (RelayManager.Instance != null){
-                Debug.Log("disconnect");
-               // RelayManager.Instance.Disconnect();
-                    //RelayManager.Instance.Cleanup();
-            }
-            Hide();
-            LobbySetup.Instance.Show();
-        });
-*/
-        Hide();
         
+        WordBankButton.onClick.AddListener(() => {
+           WordToDrawText.text = "Draw a "+ WordBank.Instance.GetRandomWord("easy");
+        
+        
+     });
     }
     
 
