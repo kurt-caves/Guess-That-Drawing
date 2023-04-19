@@ -1,2 +1,16 @@
-<h1>Design.html</h1>
+<p>Design.html</p>
 
+<h1> Achitecture Diagram</h1>
+<img src="clientserver.png" alt="Client Server diagram">
+
+<h2> Explanation </h2>
+<p>
+In our client/server architecture, the game is hosted on a central server that communicates with multiple clients. Each client is responsible for sending their drawings and guesses to the game server.
+<br><br>
+Upon receiving  information from the client,  the server calculates a game state. Information in the game state include: player scores, chat messages, and pixels on the drawing board. The game server then sends the game state back to the client. Once the client receives the information, their graphic user interface is updated to reflect the changes.
+<br><br>
+The database is responsible for storing important information, such as user accounts, game state, and game history. The game server may request information from the server as needed.
+<br><br>
+Overall, this architecture allows for communication and data storage to be centralized and managed by the game server.
+
+</p>
