@@ -15,7 +15,7 @@ public class PixelArtDrawingSystem : MonoBehaviour
     [SerializeField] private Texture2D colorTexture2D;
     private Grid<GridObject> grid;
     private float CellSize = .5f;
-    //private string PenType ="Circle";//Circle   Square     Fill
+    private string PenType = "Circle";//Circle   Square     Fill
     private Vector2 colorUV;
 
     
@@ -47,14 +47,14 @@ public class PixelArtDrawingSystem : MonoBehaviour
 
             int penSize = GetPenSizeInt();
 
-            if(colorUV == new Vector2(.3f, 1f)){
+            if(PenType == "Fill"){
                 Vector3 gridWorldPositionOrigin = mousePosition;
                 GridObject gridObjectOrigin = grid.GetGridObject(gridWorldPositionOrigin);
                 edgeBucket(mousePosition, gridObjectOrigin.GetColorUV());
             }
 
 
-            if(colorUV == new Vector2(0, 1)||colorUV == new Vector2(0, 0)){
+            if(PenType == "Square"){
                 for (int i=0; i<4; ++i)
                 {
                     int ix=1;
@@ -83,7 +83,7 @@ public class PixelArtDrawingSystem : MonoBehaviour
                 } 
             }
 
-            if(colorUV == new Vector2(.5f, 1)){
+            if(PenType == "Circle"){
             Vector3 vec = mousePosition;
             vec.x +=penSize;
             vec.y +=penSize;
@@ -139,7 +139,9 @@ public class PixelArtDrawingSystem : MonoBehaviour
     }
     private void SetPenSizeInt() 
     {
-        
+        PenType="Circle";
+        PenType="Square";
+        PenType="Fill";
     }
 
     public class GridObject // *********************************
