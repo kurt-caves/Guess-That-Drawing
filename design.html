@@ -12,5 +12,12 @@ Upon receiving  information from the client,  the server calculates a game state
 The database is responsible for storing important information, such as user accounts, game state, and game history. The game server may request information from the server as needed.
 <br><br>
 Overall, this architecture allows for communication and data storage to be centralized and managed by the game server.
-
+<br><br>
+The major class's PixelArtDrawingSystem, PixelArtDrawingSystemVisual, TestLobby, RelayManager, ChatManager, and WordBank.
+<br>
+The "TestLobby" and "RelayManager" are classes used to construct the lobby. "TestLobby" holds variables, handles button inputs and pairs users into lobby's and "RelayManager" allows users to connect to the lobby's securely without a dedicated server.
+<br>
+The "WordBank" and "ChatManager" are classes used to construct the game room. "WordBank" Class stores and sorts words for other classes to call and receive and "ChatManager" Class handles inputs and updates of the chat box.
+<br>
+The "PixelArtDrawingSystem" and "PixelArtDrawingSystemVisual" are classes used to construct the canvas. "PixelArtDrawingSystem" initializes the canvas and "PixelArtDrawingSystemVisual" Class apply updates made from the "PixelArtDrawingSystem" onto the mesh to display the canvas.
 </p>
