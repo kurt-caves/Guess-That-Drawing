@@ -47,3 +47,4 @@
 *.lxo filter=lfs diff=lfs merge=lfs -text
 Assets filter=lfs diff=lfs merge=lfs -text
 ProjectSettings filter=lfs diff=lfs merge=lfs -text
+../Guess-That-Drawing/ filter=lfs diff=lfs merge=lfs -text

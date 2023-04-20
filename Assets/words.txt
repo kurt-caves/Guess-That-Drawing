@@ -6,8 +6,6 @@ mango
 pineapple
 kiwi
 strawberry
-
-[medium]
 football
 basketball
 soccer
@@ -15,40 +13,8 @@ baseball
 hockey
 volleyball
 rugby
-
-[hard]
 guitar
 bass
 violin
 piano
 keyboard
-
-Easy:
-
-Animals:
-Cat, Dog, Hamster, Rabbit, Goldfish, Parrot, Turtle, Horse, Cow, Sheep, Pig, Chicken, Duck, Goose, Turkey, Canary, Mouse, Rat, Lion, Tiger, Elephant, Monkey, Zebra, Bear, Deer, Wolf, Fox, Kangaroo, Koala, Panda, Crocodile, Snake, Penguin, Fish, Dolphin, Shark, Octopus, Starfish
-
-Food:
-Apple, Banana, Orange, Mango, Pineapple, Kiwi, Strawberry, Blueberry, Raspberry, Blackberry, Cherry, Grape, Watermelon, Cantaloupe, Peach, Plum, Pear, Lemon, Lime, Carrot, Broccoli, Cabbage, Lettuce, Spinach, Onion, Garlic, Tomato, Potato, Yams, Eggplant, Cucumber, Corn, Peas, Burger, Hot dog, Pizza, French fries, Nugget, Tacos, Burritos, Sandwich, chips, Onion rings, Cheeseburger
-
-Objects:
-Chair, Table, Couch, Lamp, Rug, Mirror, Clock, Vase, Pillow, Blanket, Curtain, Bookshelf, TV, Remote control, Telephone, Computer, Keyboard, Mouse, Printer, Fridge, Pen, Pencil, Eraser, Sharpener, Marker, Highlighter, Paper clip, Scissors, Glue, Tape, Ruler, Notebook, Folder, Whiteboard, Chalk, Crayon, Paintbrush, Calculator, Dictionary, Doll, Teddy bear, Lego, Puzzle, Board game, Card game, Barbie, car, Bicycle, Scooter, Skate, Skateboard
-
-Medium:
-
-Landmarks:
-Canyon, Fall, Park, Forest, Eiffel Tower, Statue of Liberty, Great Wall of China, Burj Khalifa, Tower of Pisa, Castle
-
-Professions:
-Doctor, Nurse, Dentist, Pharmacist, Radiologist, Neurologist, Lawyer, Judge, Clerk, Secretary, Professor, Manager, Physical education teacher, Art teacher, Music teacher, Drama teacher
-
-Sports:
-Football, Basketball, Soccer, Baseball, Hockey, Volleyball, Rugby, Handball, Water polo, Lacrosse, Cricket, Polo, Frisbee, Hockey, American football, Tennis, Golf, Gymnastics, Skating, Swimming, Scuba Diving, Skiing, Snowboarding, Skateboarding, Surfing, Biking, Boxing, Wrestling, Table tennis, Skydiving, Bungee jumping, Rock climbing, Ice climbing, Biking
-
-Hard:
-
-Musical instruments:
-Guitar, Bass, Violin, Cello, Harp, Banjo, Sitar, Oud, Flute, Saxophone, Ney, Sorna, Trumpet, French horn
-
-Science:
-Star, Planet, Comet, Asteroid, Black hole, Galaxy, Sunspot, Eclipse, Atom, Molecule, Periodic table, Chemical reaction, Acid, Force, Energy, Matter, Mass, Velocity, Acceleration, Gravity, Electromagnetic, Quantum mechanics, Nuclear physics
