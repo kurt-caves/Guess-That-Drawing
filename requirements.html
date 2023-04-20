@@ -1,70 +1,130 @@
 <h1>Requirements.html</h1>
 <h1>1. Introduction</h1>
 <h2>1.1 Purpose of Product</h2>
-<p>The purpose of this project is to develop a Unity based multiplayer game incorporating two separate roles: host and audience. The host draws an object, while the audience uses a chat box to deduce what the drawing depicts. The game is targeted towards young adults and aims to challenge players' abilities in object recognition and artistic ability while having fun competing online.&nbsp;</p>
+<p>The purpose of this project is to develop a Unity based multiplayer game incorporating two separate roles: host and audience. 
+  The host draws an object, while the audience uses a chat box to deduce what the drawing depicts. The game is targeted towards 
+  young adults and aims to challenge players' abilities in object recognition and artistic ability while having fun competing online.&nbsp;</p>
 <h2>1.2 Scope of Product</h2>
-<p>Our proposed game includes several key features, including an online lobby where players can either join or host a game, a drawing board with a pen and eraser tool for the host and a chatbox for players to guess the drawing and possibly engage in conversation during gameplay. To keep the gameplay competitive a countdown timer and a point system will be integral. Additionally the game will provide a word bank of drawing prompts as well as a reporting mechanism for uncooperative or abusive players.</p>
-<p>The proposed game does not include artificial intelligence (AI) for either the host or the audience to generate or guess drawings. Communication in our game will be limited to text based chat discluding voice chat, emojis and file uploads.</p>
+<p>Our proposed game includes several key features, including an online lobby where players can either join or host a game, 
+  a drawing board with a pen and eraser tool for the host and a chatbox for players to guess the drawing and possibly engage 
+  in conversation during gameplay. To keep the gameplay competitive a countdown timer and a point system will be integral. 
+  Additionally the game will provide a word bank of drawing prompts as well as a reporting mechanism for uncooperative or abusive players.</p>
+<p>The proposed game does not include artificial intelligence (AI) for either the host or the audience to generate or guess drawings. 
+  Communication in our game will be limited to text based chat discluding voice chat, emojis and file uploads.</p>
 <h2>1.3 Acronyms, Abbreviations, Definitions</h2>
 <ol>
-<li>Unity: A cross-platform game engine used for building real-time 3D and 2D assets/projects across many different industries.</li>
-<li>Multiplayer: Refers to games that are played by more than one person simultaneously.</li>
-<li>Chatbox: Text based communication for multiple players.</li>
-<li>Word bank: A set of words that are pre selected for the host to choose from.</li>
-<li>Drawer: The initial host of the game and also the singular role of drawing objects for the audience to guess.</li>
-<li>Audience: The users who join a hosted game and guess what is being drawn by the host.</li>
+<h3><li>Unity:</h3> A cross-platform game engine used for building real-time 3D and 2D assets/projects across many different industries.</li>
+<h3><li>Multiplayer:</h3> Refers to games that are played by more than one person simultaneously.</li>
+<h3><li>Chatbox:</h3> Text based communication for multiple players.</li>
+<h3><li>Word bank:</h3> A set of words that are pre selected for the host to choose from.</li>
+<h3><li>Drawer:</h3> The initial host of the game and also the singular role of drawing objects for the audience to guess.</li>
+<h3><li>Audience:</h3> The users who join a hosted game and guess what is being drawn by the host.</li>
 </ol>
 <h2>1.4 References</h2>
 <ol>
-<li>Unity Technologies. Unity User Manual: Getting Started. Unity, Unity Technologies, 2021,<a href="https://docs.unity3d.com/Manual/index.html" target="_blank" rel="noopener"> https://docs.unity3d.com/Manual/index.html</a>.</li>
-<li>Unity Technologies. &ldquo;GUI Scripting in Unity.&rdquo; Unity, Unity Technologies, 2021,<a href="https://docs.unity3d.com/ScriptReference/GUI.html" target="_blank" rel="noopener"> https://docs.unity3d.com/ScriptReference/GUI.html</a>.</li>
-<li>Unity Technologies. &ldquo;Building WebGL Projects.&rdquo; Unity, Unity Technologies, 2021,<a href="https://docs.unity3d.com/Manual/webgl-building.html" target="_blank" rel="noopener"> https://docs.unity3d.com/Manual/webgl-building.html</a>.</li>
+<li>Unity Technologies. Unity User Manual: Getting Started. Unity, Unity Technologies, 2021,<a href="https://docs.unity3d.com/Manual/index.html" 
+                                                                                               target="_blank" rel="noopener"> https://docs.unity3d.com/Manual/index.html</a>.</li><br>
+<li>Unity Technologies. &ldquo;GUI Scripting in Unity.&rdquo; Unity, Unity Technologies, 2021,<a href="https://docs.unity3d.com/ScriptReference/GUI.html" 
+                                                                                                 target="_blank" rel="noopener"> https://docs.unity3d.com/ScriptReference/GUI.html</a>.</li><br>
+<li>Unity Technologies. &ldquo;Building WebGL Projects.&rdquo; Unity, Unity Technologies, 2021,<a href="https://docs.unity3d.com/Manual/webgl-building.html" 
+                                                                                                  target="_blank" rel="noopener"> https://docs.unity3d.com/Manual/webgl-building.html</a>.</li>
 </ol>
 
 <h1>2. General Description of Product</h1>
 
 <h2>2.1 Context of Product</h2>
-<p>Our game will be a Unity based Chrome and Firefox compatible multiplayer game hosted on simmer.io. The game will allow users to host a game or join a game that is already being hosted. The host of the game serves as the drawer and the other users as the audience, as the game progresses the role of the drawer cycles through the audience in the order that they joined the game. If a host leaves before the game is finished or is booted due to complaints the next host is assigned in the same manner.&nbsp;</p>
-<p>Each game will be timed and points will be awarded based on correctly guessing the drawing in a timely manner. Players in the audience will also be subject to the same reporting mechanism as the host.&nbsp;</p>
+<p>Our game will be a Unity based Chrome and Firefox compatible multiplayer game hosted on simmer.io. The game will allow users to host a game or 
+  join a game that is already being hosted. The host of the game serves as the drawer and the other users as the audience, as the game progresses 
+  the role of the drawer cycles through the audience in the order that they joined the game. If a host leaves before the game is finished or is 
+  booted due to complaints the next host is assigned in the same manner.&nbsp;</p>
+<p>Each game will be timed and points will be awarded based on correctly guessing the drawing in a timely manner. Players in the audience will also 
+  be subject to the same reporting mechanism as the host.&nbsp;</p>
 
 <h2>2.2 Domain Model</h2>
-<p>Our domain model will consist of a player class defined as host or audience, game server, the canvas or drawing board, the chat system and the scoring system. The player class will have attributes, name, email, score and password. The host for the game shares a server for other players to join. The drawing board class will contain three attributes,&nbsp; title, difficulty and image. The image attribute will store a png of the canvas.</p>
-<p>The game server class will consist of players, status of players, and the canvas. The status is used to indicate whether the game room is currently waiting for players, in progress, or finished. The canvas attribute is a reference to the drawing that is currently being guessed. The score class contains an integer based score attribute to represent a score achieved by players and a reference to each player.</p>
+<p>Our domain model will consist of a player class defined as host or audience, game server, the canvas or drawing board, the chat system and the 
+  scoring system. The player class will have attributes, name, email, score and password. The host for the game shares a server for other players 
+  to join. The drawing board class will contain three attributes,&nbsp; title, difficulty and image. The image attribute will store a png of the 
+  canvas.</p>
+<p>The game server class will consist of players, status of players, and the canvas. The status is used to indicate whether the game room is currently 
+  waiting for players, in progress, or finished. The canvas attribute is a reference to the drawing that is currently being guessed. The score class 
+  contains an integer based score attribute to represent a score achieved by players and a reference to each player.</p>
 
 <h2>2.3 Product Functions</h2>
 <p>Some of the general product functions include:</p>
 <ol>
-<li><h3>Drawing creation:</h3> The game enables players to create their own drawings using a variety of tools and features. Players can use different colors, brushes, and patterns to create unique and complex drawings.</li>
-<li><h3>Guessing game:</h3> The game also involves guessing the drawings of other players. Players are presented with a drawing and are required to guess what it represents. The game keeps track of the number of correct guesses made by each player.</li>
-<li><h3>Multiplayer:</h3> "Guess That Drawing" is a multiplayer game, allowing players to compete against each other in real-time. Players can invite their friends to play or join public games.</li>
-<li><h3>Chat:</h3> The game also features a chat function, allowing players to communicate with each other during the game. This enables players to collaborate, share tips and hints, or just chat with each other.</li>
-<li><h3>Scoring system:</h3> The game features a scoring system that rewards players for correct guesses and successful drawings. Points earned can be used to unlock new features or levels in the game.</li></ol>
+<li><h3>Drawing creation:</h3> The game enables players to create their own drawings using a variety of tools and features. Players can use different 
+  colors, brushes, and patterns to create unique and complex drawings.</li>
+<li><h3>Guessing game:</h3> The game also involves guessing the drawings of other players. Players are presented with a drawing and are required to 
+  guess what it represents. The game keeps track of the number of correct guesses made by each player.</li>
+<li><h3>Multiplayer:</h3> "Guess That Drawing" is a multiplayer game, allowing players to compete against each other in real-time. Players can invite 
+  their friends to play or join public games.</li>
+<li><h3>Chat:</h3> The game also features a chat function, allowing players to communicate with each other during the game. This enables players to 
+  collaborate, share tips and hints, or just chat with each other.</li>
+<li><h3>Scoring system:</h3> The game features a scoring system that rewards players for correct guesses and successful drawings. Points earned can 
+  be used to unlock new features or levels in the game.</li></ol>
 
 <h2>2.4 User Stories</h2>
-<a href="https://github.com/kurt-caves/Guess-That-Drawing/blob/main/userstories.html " target="_blank" rel="noopener"> https://github.com/kurt-caves/Guess-That-Drawing/blob/main/userstories.html </a>.
+
+<ol><li>As a host, I want to be able to create a private game session and invite my friends to join, so that we can play together and have a fun, 
+  private gaming experience.</li><br>
+<li>As a player, I want to be able to filter available games in the lobby based on criteria such as number of players or game parameters.</li><br>
+<li>As a player, I want to be able to choose a drawing prompt from the word bank to create a drawing for other players to guess.</li><br>
+<li>As a player, I want the game to keep track of my score based on the number of correct guesses I make.</li><br>
+<li>As a player, I want to be able to customize my avatar and username, so that I can express my personal style and differentiate myself from other players.</li><br>
+<li>As a player, I want to be able to report any inappropriate content such as offensive drawings or chat messages during gameplay.</li><br>
+<li>As a player, I want to be able to customize my drawing tools such as brush size, color, and opacity.</li><br>
+<li>As a player, I want to be able to rejoin a game if I lose my connection or accidentally leave the game.</li><br>
+<li>As a player, I want to be able to undo and redo my drawing actions, in case I make a mistake.</li></ol>
+
+<p> For more information please click on link below:</p>
+<a href="https://github.com/kurt-caves/Guess-That-Drawing/blob/main/userstories.html " 
+   target="_blank" rel="noopener"> https://github.com/kurt-caves/Guess-That-Drawing/blob/main/userstories.html </a>.
 
 <h2>2.5 Constraints:</h2>
 <p>There are several constraints on the "Guess That Drawing" system:</p>
-<ol><li><h3>Hardware constraints:</h3> The game's performance may be limited by the hardware specifications of the devices used to run it. Too old or less powerful devices may not be able to handle the game's graphics and processing demands.</li>
-<li><h3>Bandwidth limitations:</h3> The game requires an internet connection to function, and the performance of the game may be impacted by limited bandwidth. This could lead to slower loading times, lagging, or poor video quality.</li>
-<li><h3>Time and resource constraints:</h3> Developing a high-quality online game can be time-consuming and require significant resources, including human and financial resources. These constraints could impact the overall quality of the game and the speed at which new features are added.</li>
-<li><h3>User experience:</h3> The success of the game will depend on the user experience. Constraints on the user interface, user interaction, and usability can impact the overall satisfaction and enjoyment of players. Therefore, the design and development of the game should take into account user feedback and user testing to ensure a positive user experience.</li></ol>
+<ol><li><h3>Hardware constraints:</h3> The game's performance may be limited by the hardware specifications of the devices used to run it. 
+  Too old or less powerful devices may not be able to handle the game's graphics and processing demands.</li>
+<li><h3>Bandwidth limitations:</h3> The game requires an internet connection to function, and the performance of the game may be impacted by 
+  limited bandwidth. This could lead to slower loading times, lagging, or poor video quality.</li>
+<li><h3>Time and resource constraints:</h3> Developing a high-quality online game can be time-consuming and require significant resources, 
+  including human and financial resources. These constraints could impact the overall quality of the game and the speed at which new features are added.</li>
+<li><h3>User experience:</h3> The success of the game will depend on the user experience. Constraints on the user interface, user interaction, 
+  and usability can impact the overall satisfaction and enjoyment of players. Therefore, the design and development of the game should take 
+  into account user feedback and user testing to ensure a positive user experience.</li></ol>
 
 <h1>3. Functional Requirements:</h1>
 <p>Some of the functional requirements for the game may include:</p>
-<ol><li><h3>User registration and authentication:</h3> Users should be able to create a username and login.</li>
-<li><h3>Drawing tools and features:</h3> The game offers a range of drawing tools and features, including the ability to select different colors and brushes  as well as the ability to erase strokes.</li>
-<li><h3>Drawing sharing and rating:</h3> Users share their drawings with other players and rate other players' drawings.</li>
-<li><h3>Guessing game mechanics:</h3> The game allows users to guess other players' drawings and receive feedback on their guesses.</li>
-<li><h3>Multiplayer functionality:</h3> The game supports multiplayer functionality, allowing users to compete against each other in real-time.</li>
-<li><h3>Chat and communication:</h3> Users will be able to communicate with each other through in-game chat.</li>
-<li><h3>Scoring and reward system:</h3> The game will have a scoring and reward system that incentivizes users to play, guess, and create drawings.</li>
-<li><h3>Leaderboards and rankings:</h3> The game will have a system for tracking user scores and rankings.</li></ol>
+<ol><li><h3>User registration and authentication:</h3> Users should be able to create a username and login. This username will be shown in 
+  chat box if the player writes something. Also it is shown at the top of the canvas when that palyer is a host and is drawing.</li>
+<li><h3>Drawing tools and features:</h3> The game offers a range of drawing tools and features, including the ability to select different 
+  colors and brushes  as well as the ability to erase strokes. These tools are useable just by the player who is his turn for drawing.</li>
+<li><h3>Drawing sharing and rating:</h3> Players' drawings will be rated by other players at the end of the game. All players should give a 
+  credit to others drawing at the end of the game. That credit will collect with the score of each player. This feature causes each player 
+  try to draw a nice picture to get the most credit at the end of game.
+</li>
+<li><h3>Guessing game mechanics:</h3> The game allows users to guess other players' drawings and receive feedback on their guesses. Players 
+  can type in chat box. The username of the player and what he types will be shown in chat box. If a player writes the correct word, it is 
+  not shown in chat box, but it is writen " 'this username' guessed" or something like this sentence in chat box.</li>
+<li><h3>Multiplayer functionality:</h3> The game supports multiplayer functionality, allowing users to compete against each other in real-time. 
+  First a player creates a game. Then the server generates a name for that game. Other players must click on "join" button to join the game.</li>
+<li><h3>Chat and communication:</h3> Users will be able to communicate with each other through in-game chat. The server will filter bad words. 
+  So if a player try to write a bad word in chat box, it is not shown in chat box. Also if a player writes the correct word, it is not shown in 
+  chat box, but it is writen " 'this username' guessed" or something like this sentence in chat box.</li>
+<li><h3>Scoring and reward system:</h3> The game will have a scoring and reward system that incentivizes users to play, guess, and create drawings. 
+  If a player guess the word correctly in the first 30 percent of the time of the round, he will get full credit of that round. After the first 
+  30 percent of the time, for each 5 seconds the score of gussing will be decreased by 1. By this scoring system if a player can guess the word at 
+  the last second of the round, he will get at least 2 or 3 credits. A player will get zero if and only if he can not guess the word. Each player 
+  will get another credit at the end of the game. All players should give a credit to others drawing at the end of the game. That credit will collect 
+  with the score of each player. This feature causes each player try to draw a nice picture to get the most credit at the end of game.</li>
+<li><h3>Leaderboards and rankings:</h3> The game will have a system for tracking user scores and rankings. During drawing there will be a table in 
+  canvas to show scores of all players. So each player can track his score. This feature causes each player try to get more credit to take the higher 
+  rank. After each round, this table will be updated.</li></ol>
 
 <h1>4. System and Non-functional Requirements</h1>
 <h2>4.1 External Interface Requirements (User, Hardware, Software, Communications)</h2>
 <p>The product interfaces include user interfaces, hardware interfaces, software interfaces, and communication interfaces.</p>
-<p><h3>NF.4.1.1 User Interface:</h3> The game should have a visually appealing and easy-to-navigate user interface, compatible with various devices such as desktops, tablets, and smartphones.</p>
+<p><h3>NF.4.1.1 User Interface:</h3> The game should have a visually appealing and easy-to-navigate user interface, compatible with various devices 
+such as desktops, tablets, and smartphones.</p>
 <p><h3>NF.4.1.2 Hardware Interface:</h3> The game should be able to run on common hardware configurations, including various CPU, GPU, and memory specifications.</p>
 <p><h3>NF.4.1.3 Software Interface:</h3> The game should be compatible with popular web browsers, such as Google Chrome, Mozilla Firefox, Microsoft Edge, and Safari.</p>
 <p><h3>NF.4.1.4 Communications Interface:</h3> The game should support real-time communications between players, including chat functionality and drawing updates.</p>
@@ -76,7 +136,8 @@
 <h2>4.3 Design Constraints</h2>
 <p>External requirements and limitations that may impact the design choices for the product:</p>
 <p><h3>NF.4.3.1 Platform:</h3> The game must be developed using Unity and should be accessible through popular web browsers.</p>
-<p><h3>NF.4.3.2 Budget:</h3> The development of the game should be accomplished within the allocated budget which is $0, which may impact the choice of technologies, features, and design elements.</p>
+<p><h3>NF.4.3.2 Budget:</h3> The development of the game should be accomplished within the allocated budget which is $0, which may impact the choice of technologies, 
+features, and design elements.</p>
 <p><h3>NF.4.3.3 Time:</h3> The game should be developed within the given project timeline, which may affect the scope of features and functionality.</p>
 <h2>4.4 Quality Requirements</h2>
 <p>Quality expectations that users have from the product:</p>
@@ -90,4 +151,3 @@
 
 <h1>5. Appendices</h1>
 <a href="https://github.com/kurt-caves/Guess-That-Drawing/blob/main/problem.html" target="_blank" rel="noopener"> https://github.com/kurt-caves/Guess-That-Drawing/blob/main/problem.html</a>
-
