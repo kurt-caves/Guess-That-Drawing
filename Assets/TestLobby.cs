@@ -19,7 +19,7 @@ public class TestLobby : MonoBehaviour {
    
     
     private int lobbyCount = 0;
-    private int minPlayers =  2;
+    private int minPlayers =  1;
     private int maxPlayers = 6;
     
     //private bool _wasDisconnected = false;

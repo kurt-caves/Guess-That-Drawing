@@ -4,19 +4,27 @@ using UnityEngine;
 
 public class WordBank : MonoBehaviour
 {
+    public static WordBank Instance { get; private set; }
+
     public TextAsset words;
     public string[] easyWords;
     public string[] mediumWords;
     public string[] hardWords;
 
-    void Start()
+    void Awake()
     {
+       
+        Instance = this;
         string[] allWords = words.text.Split('\n');
         foreach (string word in allWords)
         {
+            //added for testing
+            easyWords = AddToArray(easyWords, word.Replace("[easy]", "").Trim());
+            
             if (word.Contains("[easy]"))
             {
                 easyWords = AddToArray(easyWords, word.Replace("[easy]", "").Trim());
+                Debug.Log(word);
             }
             else if (word.Contains("[medium]"))
             {
@@ -38,7 +46,7 @@ public class WordBank : MonoBehaviour
 
     public string GetRandomWord(string difficulty)
     {
-        if (difficulty == "easy")
+        if (difficulty.Equals("easy"))
         {
             return easyWords[Random.Range(0, easyWords.Length)];
         }
