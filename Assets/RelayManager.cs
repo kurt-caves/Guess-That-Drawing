@@ -21,6 +21,10 @@ public class RelayManager : MonoBehaviour
     private bool _inGame = false;
     private ulong clientId;
 
+    public event EventHandler OnLeftGame;
+    public event EventHandler OnUpdatedPlayerList;
+    
+
      public enum ConnectionStatus
     {
         Connected,
@@ -80,7 +84,7 @@ public class RelayManager : MonoBehaviour
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
             NetworkManager.Singleton.StartHost();
-
+            
             _inGame = true;
 
 
@@ -101,8 +105,7 @@ public class RelayManager : MonoBehaviour
 
              RelayServerData relayServerData = new RelayServerData(joinAllocation, "dtls");
             
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
-
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData); 
             NetworkManager.Singleton.StartClient();
             _inGame = true;
 
@@ -122,19 +125,35 @@ public class RelayManager : MonoBehaviour
         }
     }
 
-    private void OnClientDisconnected(ulong clientId){
+    public void OnClientDisconnected(ulong clientId){
         
-        if(NetworkManager.Singleton.LocalClientId == clientId){
+        m_Players.Remove(clientId);
+        if((NetworkManager.Singleton.LocalClientId == clientId)){
+            TestLobby.Instance.LeaveLobby();
             NetworkManager.Singleton.Shutdown();
-            
+           
         }
+
+        if(m_Players.Count < TestLobby.Instance.GetMinPlayers()){
+            TestLobby.Instance.LeaveLobby();
+            NetworkManager.Singleton.Shutdown();
+            _inGame = false;
+            OnLeftGame?.Invoke(this, EventArgs.Empty);
+        }
+        
+
+        
 
 
     }
    
     private void OnClientConnected(ulong clientId){
         Debug.Log("Player connected with client ID {"+clientId+"}");
+        
+        this.clientId = clientId;
         RegisterPlayer(clientId);
+        OnUpdatedPlayerList?.Invoke(this, EventArgs.Empty);
+
 
         /*
         if(NetworkManager.Singleton.hasAuthority == true){
@@ -143,7 +162,7 @@ public class RelayManager : MonoBehaviour
         }
        */
        /*
-        this.clientId = clientId;
+        
 
         if(TestLobby.Instance.getClientId() == this.clientId){
             RegisterPlayer(TestLobby.Instance.getPlayerName());
@@ -155,11 +174,11 @@ public class RelayManager : MonoBehaviour
 
     }
 
-    /*
+    
     public ulong getClientId(){
         return clientId;
     }
-    */
+    
 
     static List<ulong> m_Players  = new List<ulong>();
     

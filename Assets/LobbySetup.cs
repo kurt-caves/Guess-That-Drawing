@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -49,6 +50,9 @@ public class LobbySetup : MonoBehaviour {
 
     private void Start() {
         TestLobby.Instance.OnLobbyListChanged += UpdateLobbyCount_Event;
+        
+        
+       
       
         Hide();
     }
@@ -56,7 +60,6 @@ public class LobbySetup : MonoBehaviour {
     private void UpdateLobbyCount_Event(object sender, TestLobby.OnLobbyListChangedEventArgs e) {
         UpdateLobbyCount();
     }
-    
 
     private void UpdateLobbyCount() {
         
