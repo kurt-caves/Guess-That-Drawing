@@ -39,24 +39,28 @@ public class PixelArtDrawingSystem : NetworkBehaviour
 
     private void Update() 
     {
-        if (Input.GetKeyDown(KeyCode.B)) colorUV = new Vector2(.5f, 1);
-        if (Input.GetKeyDown(KeyCode.R)) colorUV = new Vector2(0, 1);
-        if (Input.GetKeyDown(KeyCode.G)) colorUV = new Vector2(.3f, 1f);
-        if (Input.GetKeyDown(KeyCode.W)) colorUV = new Vector2(0, 0);
-        
-
-        if (Input.GetMouseButtonDown(0)) 
-        {
-            Vector3 mousePosition = UtilsClass.GetMouseWorldPosition();
-
-
-            int penSize = GetPenSizeInt();
+        if(PlayerList.Instance.getIsArtist()){ //only artist can draw
+            if (Input.GetKeyDown(KeyCode.B)) colorUV = new Vector2(.5f, 1);
+            if (Input.GetKeyDown(KeyCode.R)) colorUV = new Vector2(0, 1);
+            if (Input.GetKeyDown(KeyCode.G)) colorUV = new Vector2(.3f, 1f);
+            if (Input.GetKeyDown(KeyCode.W)) colorUV = new Vector2(0, 0);
             
-            //added for multiplayer
-            UpdateDrawingServerRpc(mousePosition, penSize, colorUV, NetworkManager.Singleton.LocalClientId);
 
+            if (Input.GetMouseButtonDown(0)) 
+            {
+                Vector3 mousePosition = UtilsClass.GetMouseWorldPosition();
+
+
+                int penSize = GetPenSizeInt();
+                
+                //added for multiplayer
+                UpdateDrawingServerRpc(mousePosition, penSize, colorUV, NetworkManager.Singleton.LocalClientId);
+
+
+            }
 
         }
+        
     }
 
     private void UpdateDrawing(Vector3 mousePosition, int penSize, Vector2 colorUV, ulong senderPlayerId) {

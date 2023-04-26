@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
+using System;
 
 public class ChatBehaviour : NetworkBehaviour
 {
@@ -19,6 +20,23 @@ public class ChatBehaviour : NetworkBehaviour
 
     [SerializeField] List<Message> messageList = new List<Message>();
  
+    private void Start() {
+        GameBehavior.Instance.OnTookTurn += UpdateTurn_Event;
+        
+    }
+
+    private void UpdateTurn_Event(object sender, EventArgs e) {
+        UpdateTurn();
+    }
+
+    private void UpdateTurn() {
+        if(PlayerList.Instance.getIsArtist()){
+            chatBox.interactable = false;
+        }else{
+            chatBox.interactable = true;
+        }
+    }
+
 
     private void Update()
     {
@@ -28,8 +46,17 @@ public class ChatBehaviour : NetworkBehaviour
         {
             if(Input.GetKeyDown(KeyCode.Return))
             {
-                SendChatMessageServerRpc(username + ": "+chatBox.text, Message.MessageType.playerMessage, NetworkManager.Singleton.LocalClientId);
-                chatBox.text = "";
+                Debug.Log("The word is " + GameBehavior.Instance.getSecretWord());
+                Debug.Log("Your word is " + chatBox.text);
+                if(chatBox.text.Equals(GameBehavior.Instance.getSecretWord())){
+                    SendChatMessageServerRpc(username + " guessed the word!", Message.MessageType.info, NetworkManager.Singleton.LocalClientId);
+                    Debug.Log("Space");
+                }
+                else{
+                    SendChatMessageServerRpc(username + ": "+chatBox.text, Message.MessageType.playerMessage, NetworkManager.Singleton.LocalClientId);
+                    chatBox.text = "";
+                }
+                
             }
         }
         else
@@ -99,6 +126,12 @@ public class ChatBehaviour : NetworkBehaviour
     private void SendChatMessageServerRpc(string message,  Message.MessageType messageType, ulong senderPlayerId) {
         ReceiveChatMessageClientRpc(message, messageType,  senderPlayerId);
     }
+
+
+
+
+
+
 }
 
 

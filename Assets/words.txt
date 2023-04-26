@@ -17,8 +17,4 @@ guitar
 bass
 violin
 piano
-<<<<<<< HEAD
 keyboard
-=======
-keyboard
->>>>>>> 11858c35a10ddb681dbc0172ab0cab430d82c62e

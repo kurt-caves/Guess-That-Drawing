@@ -15,11 +15,23 @@ public class PlayerList : NetworkBehaviour
     [SerializeField] List<PlayerObj> playerList = new List<PlayerObj>();
  
     
-    public int points;
-    public string username;
-    public ulong clientId;
-    public bool isArtist;
+    private int points;
+    private string username;
+    private ulong clientId;
+    private bool isArtist;
 
+
+    public ulong getClientId(){
+        return clientId;
+    }
+
+    public void setIsArtist(bool amIArtist){
+        this.isArtist = amIArtist;
+    }
+
+    public bool getIsArtist(){
+        return isArtist;
+    }
 
     private void Awake(){
         Instance = this;

@@ -19,10 +19,13 @@ public class RelayManager : MonoBehaviour
     public static RelayManager Instance { get; private set; }
 
     private bool _inGame = false;
-    private ulong clientId;
-
+   
     public event EventHandler OnLeftGame;
     public event EventHandler OnUpdatedPlayerList;
+
+    private int arrLength = 0;
+    private ulong[] pArray;
+    
     
 
      public enum ConnectionStatus
@@ -48,6 +51,10 @@ public class RelayManager : MonoBehaviour
 
     private void Awake() {
         Instance = this;
+        pArray = new ulong[TestLobby.Instance.GetMaxPlayers()];
+        for (int i = 0; i < pArray.Length; i++ ) {
+            pArray[i] = 1000000;
+         }
     }
 
     public void Start()
@@ -86,7 +93,7 @@ public class RelayManager : MonoBehaviour
             NetworkManager.Singleton.StartHost();
             
             _inGame = true;
-
+            
 
             return joinCode;
         } catch(RelayServiceException e) {
@@ -107,6 +114,7 @@ public class RelayManager : MonoBehaviour
             
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData); 
             NetworkManager.Singleton.StartClient();
+     
             _inGame = true;
 
         } catch (RelayServiceException e){
@@ -119,78 +127,82 @@ public class RelayManager : MonoBehaviour
         return _inGame;
     }
 
-    private void Update(){
-        if(NetworkManager.Singleton.ShutdownInProgress){
-            //TestLobby.Instance.GoBackToLobby(true);
-        }
-    }
-
+    
+    //need to handle players disconnected
     public void OnClientDisconnected(ulong clientId){
         
-        m_Players.Remove(clientId);
+       // m_Players.Remove(clientId);
+       TestLobby.Instance.LeaveLobby();
+        NetworkManager.Singleton.Shutdown();
+        _inGame = false;
+        OnLeftGame?.Invoke(this, EventArgs.Empty);
+        /*
         if((NetworkManager.Singleton.LocalClientId == clientId)){
             TestLobby.Instance.LeaveLobby();
             NetworkManager.Singleton.Shutdown();
            
         }
-
-        if(m_Players.Count < TestLobby.Instance.GetMinPlayers()){
+        
+        if(GameBehavior.Instance.getNumPlayers() < TestLobby.Instance.GetMinPlayers()){
             TestLobby.Instance.LeaveLobby();
             NetworkManager.Singleton.Shutdown();
             _inGame = false;
             OnLeftGame?.Invoke(this, EventArgs.Empty);
         }
+        else{
+            
+            if(TestLobby.Instance.IsLobbyHost()){
+                arrLength --;
+                GameBehavior.Instance.UpdateList(pArray, arrLength);
+            }
+            
+        }
+        */
         
 
         
 
 
     }
-   
+    
+    
     private void OnClientConnected(ulong clientId){
         Debug.Log("Player connected with client ID {"+clientId+"}");
         
-        this.clientId = clientId;
-        RegisterPlayer(clientId);
+        
+        if(TestLobby.Instance.IsLobbyHost()){
+            pArray[arrLength] = clientId;
+            arrLength ++;
+            GameBehavior.Instance.UpdateList(pArray, arrLength);
+            
+            
+        
+        }
+
         OnUpdatedPlayerList?.Invoke(this, EventArgs.Empty);
-
-
-        /*
-        if(NetworkManager.Singleton.hasAuthority == true){
-             Debug.Log("Total number of people is " + NetworkManager.Singleton.ConnectedClients.Count);
-
-        }
-       */
-       /*
-        
-
-        if(TestLobby.Instance.getClientId() == this.clientId){
-            RegisterPlayer(TestLobby.Instance.getPlayerName());
-          
-        }
-        */
-        
         
 
     }
 
     
     public ulong getClientId(){
-        return clientId;
+        return NetworkManager.Singleton.LocalClientId;
     }
     
 
-    static List<ulong> m_Players  = new List<ulong>();
     
+ /*
     public static void RegisterPlayer(ulong clientId)
     {
         m_Players.Add(clientId);
 
     }
-
+*/
+/*
     public List<ulong> GetPlayerList(){
         return m_Players;
     }
+    */
     //added
     /*
     public void Disconnect()

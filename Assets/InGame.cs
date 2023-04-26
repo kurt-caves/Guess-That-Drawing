@@ -12,17 +12,17 @@ public class InGame : MonoBehaviour
     public static InGame Instance { get; private set; }
     
 
-    [SerializeField] private Button WordBankButton;
-    [SerializeField] private TextMeshProUGUI WordToDrawText;
+   // [SerializeField] private Button WordBankButton;
+   // [SerializeField] private TextMeshProUGUI WordToDrawText;
     
    
     
-     private void Start() {
+    private void Start() {
         TestLobby.Instance.OnJoinedLobby += UpdateLobby_Event;
         TestLobby.Instance.OnJoinedLobbyUpdate += UpdateLobby_Event;
         RelayManager.Instance.OnLeftGame += LeaveGame_Event;
         RelayManager.Instance.OnUpdatedPlayerList +=  UpdatePlayerList_Event;
-
+        
         Hide();
     }
 
@@ -44,18 +44,19 @@ public class InGame : MonoBehaviour
     
     private void  UpdatePlayerList() {
         PlayerList.Instance.UpdateList();
+    
      
     }
 
     private void Awake()
     {
         Instance = this;
-        
+        /*
         WordBankButton.onClick.AddListener(() => {
-           WordToDrawText.text = "Draw a "+ WordBank.Instance.GetRandomWord("easy");
+            WordToDrawText.text = "Draw a "+ WordBank.Instance.GetRandomWord("easy");
         
-        
-     });
+        });
+        */
     }
     
 
@@ -81,8 +82,10 @@ public class InGame : MonoBehaviour
             }
             */
 
-        }  
-     
+    }  
+    
+
+
     
 
 
