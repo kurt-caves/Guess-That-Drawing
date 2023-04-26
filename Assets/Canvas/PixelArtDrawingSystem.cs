@@ -11,14 +11,17 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     public static PixelArtDrawingSystem Instance { get; private set; }
 
     
+    
+
 
     [SerializeField] private PixelArtDrawingSystemVisual pixelArtDrawingSystemVisual;
     [SerializeField] private Texture2D colorTexture2D;
     private Grid<GridObject> grid;
-    private float CellSize = .05f;
-    //private string PenType ="Circle";//Circle   Square     Fill
-    private Vector2 colorUV;
-
+    private float CellSize = .05f;//size of grid pixel
+    private string PenType ="Circle";//Circle   Square
+    private string ToolType="Pen";// Pen  Eraser  Bucket
+    private Vector2 colorUV;//current pen color
+    private int PenSize= 15;
     
 
     private void Awake() 
@@ -45,8 +48,10 @@ public class PixelArtDrawingSystem : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.W)) colorUV = new Vector2(0, 0);
         
 
+
         if (Input.GetMouseButtonDown(0)) 
         {
+            
             Vector3 mousePosition = UtilsClass.GetMouseWorldPosition();
 
 
@@ -61,15 +66,13 @@ public class PixelArtDrawingSystem : NetworkBehaviour
 
     private void UpdateDrawing(Vector3 mousePosition, int penSize, Vector2 colorUV, ulong senderPlayerId) {
 
-
-            if(colorUV == new Vector2(.3f, 1f)){
-                Vector3 gridWorldPositionOrigin = mousePosition;
-                GridObject gridObjectOrigin = grid.GetGridObject(gridWorldPositionOrigin);
-                edgeBucket(mousePosition, gridObjectOrigin.GetColorUV());
-            }
-
-
-            if(colorUV == new Vector2(0, 1)||colorUV == new Vector2(0, 0)){
+        if(ToolType == "Bucket"){
+            Vector3 gridWorldPositionOrigin = mousePosition;
+            GridObject gridObjectOrigin = grid.GetGridObject(gridWorldPositionOrigin);
+            edgeBucket(mousePosition, gridObjectOrigin.GetColorUV());
+        }
+        else{
+            if(PenType == "Square"){
                 for (int i=0; i<4; ++i)
                 {
                     int ix=1;
@@ -86,21 +89,27 @@ public class PixelArtDrawingSystem : NetworkBehaviour
                             Vector3 gridWorldPosition = mousePosition + new Vector3(x*ix, y*iy) * CellSize;
                             GridObject gridObject = grid.GetGridObject(gridWorldPosition);
                         
-                            if (gridObject != null) {
+                            if (gridObject != null && ToolType=="Pen") {
                                 gridObject.SetColorUV(colorUV);
+                            }
+                            else if(gridObject != null && ToolType=="Eraser"){
+                                gridObject.SetColorUV(new Vector2(0, 0));
                             }
                         }
                     }
-                
-                
-                if(grid.GetGridObject(mousePosition) != null){
-                    grid.GetGridObject(mousePosition).SetColorUV(colorUV);
-                }
+
+                // if(grid.GetGridObject(mousePosition) != null && ToolType=="Pen"){
+                //     grid.GetGridObject(mousePosition).SetColorUV(colorUV);
+                // }
+                // else if(grid.GetGridObject(mousePosition) != null && ToolType=="Eraser"){
+                //     grid.GetGridObject(mousePosition).SetColorUV(new Vector2(0, 0));
+                // }
                 
                 } 
             }
+        
 
-            if(colorUV == new Vector2(.5f, 1)){
+            if(PenType == "Circle"){
                 Vector3 vec = mousePosition;
                 vec.x +=penSize;
                 vec.y +=penSize;
@@ -115,25 +124,26 @@ public class PixelArtDrawingSystem : NetworkBehaviour
                         ix=-1;
                         iy=-1;
                     }
-                    for (int x = 0; (double)x < (((double)penSize)+1.0) / 2.0; x++) {
-                        for (int y = 0; (double)y < (((double)penSize)+1.0) / 2.0; y++) {
+                    for (int x = 0; x < ((penSize)+1) / 2; x++) {
+                        for (int y = 0; y < ((penSize)+1) / 2; y++) {
 
-                            if(2.0*Math.PI*(double)penSize+1.0>x*x+y*y)
+                            if(3.14*(double)penSize+1.0 > x*x+y*y)
                             {
                                 Vector3 gridWorldPosition = mousePosition + new Vector3(x*ix, y*iy) * CellSize;
                                 GridObject gridObject = grid.GetGridObject(gridWorldPosition);
                         
-                                if (gridObject != null) {
+                                if (gridObject != null && ToolType=="Pen") {
                                     gridObject.SetColorUV(colorUV);
+                                }
+                                else if(gridObject != null && ToolType=="Eraser"){
+                                    gridObject.SetColorUV(new Vector2(0, 0));
                                 }
                             }
                         }
                     }
+                }
             }
-            }
-
-
-        
+        }
     }
 
     //added for multiplayer
@@ -156,13 +166,29 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     public Grid<GridObject> GetGrid() {
         return grid;
     }
-    private int GetPenSizeInt() 
+    public int GetPenSizeInt() 
     {
-        return 25;
+        return PenSize;
     }
-    private void SetPenSizeInt() 
+    public void SetPenSizeInt(int Size) 
     {
-        
+        PenSize = Size;
+    }
+    public string GetPenType() 
+    {
+        return PenType;
+    }
+    public void SetPenType(string Type) 
+    {
+        PenType=Type;
+    }
+    public string GetToolType() 
+    {
+        return ToolType;
+    }
+    public void SetToolType(string Type) 
+    {
+        ToolType=Type;
     }
 
     public class GridObject // *********************************

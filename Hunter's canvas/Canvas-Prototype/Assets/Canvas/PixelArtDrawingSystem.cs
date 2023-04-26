@@ -17,6 +17,7 @@ public class PixelArtDrawingSystem : MonoBehaviour
     private float CellSize = .5f;
     private string PenType = "Circle";//Circle   Square     Fill
     private Vector2 colorUV;
+    private int PenSize=15;
 
     
 
@@ -133,15 +134,21 @@ public class PixelArtDrawingSystem : MonoBehaviour
     public Grid<GridObject> GetGrid() {
         return grid;
     }
-    private int GetPenSizeInt() 
+    public int GetPenSizeInt() 
     {
-        return 25;
+        return PenSize;
     }
-    private void SetPenSizeInt() 
+    public void SetPenSizeInt(int Size) 
     {
-        PenType="Circle";
-        PenType="Square";
-        PenType="Fill";
+        PenSize = Size;
+    }
+    public String GetPenType() 
+    {
+        return PenType;
+    }
+    public void SetPenType(string Type) 
+    {
+        PenType=Type;
     }
 
     public class GridObject // *********************************
