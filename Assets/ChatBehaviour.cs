@@ -37,43 +37,67 @@ public class ChatBehaviour : NetworkBehaviour
         }
     }
 
+    private void Awake(){
+        username = Authenticate.Instance.GetPlayerName();
+    }
 
     private void Update()
     {
-    	username = Authenticate.Instance.GetPlayerName();
-       
+        HandleChat();
+  
+    }
+
+    private void HandleChat(){
+
         if(chatBox.text != "")
         {
             if(Input.GetKeyDown(KeyCode.Return))
             {
-                Debug.Log("The word is " + GameBehavior.Instance.getSecretWord());
-                Debug.Log("Your word is " + chatBox.text);
+            
                 if(chatBox.text.Equals(GameBehavior.Instance.getSecretWord())){
-                    SendChatMessageServerRpc(username + " guessed the word!", Message.MessageType.info, NetworkManager.Singleton.LocalClientId);
-                    Debug.Log("Space");
-                }
-                else{
+                    if(PlayerList.Instance.getGuessedCorrect() == false){
+                        PlayerList.Instance.addPoints(2);
+                        PlayerList.Instance.setGuessedCorrect(true);
+                        SendChatMessageServerRpc(username + " guessed the word!", Message.MessageType.info, NetworkManager.Singleton.LocalClientId);
+                        chatBox.text = "";
+                    }
+                    else{
+                        Message newMessage = new Message();
+
+                        newMessage.text = "You already guessed the word!";
+
+                        GameObject  newText = Instantiate(textObject, chatPanel.transform);
+                        newMessage.textObject = newText.GetComponent<TMPro.TextMeshProUGUI>();
+                        newMessage.textObject.text = newMessage.text;
+                        newMessage.textObject.color = MessageTypeColor(Message.MessageType.info);
+
+                        messageList.Add(newMessage);
+                    
+                    
+                    }
+                }else{
                     SendChatMessageServerRpc(username + ": "+chatBox.text, Message.MessageType.playerMessage, NetworkManager.Singleton.LocalClientId);
                     chatBox.text = "";
                 }
                 
+            
+            } //end of if return pressed
+            else
+            {
+                if(!chatBox.isFocused && Input.GetKeyDown(KeyCode.Return) )
+                    chatBox.ActivateInputField();
             }
-        }
-        else
-        {
-            if(!chatBox.isFocused && Input.GetKeyDown(KeyCode.Return) )
-                chatBox.ActivateInputField();
-        }
-        if(!chatBox.isFocused)
-        {
-            if(Input.GetKeyDown(KeyCode.Space)){
-               // SendChatMessageServerRpc("You pressed the space key!", Message.MessageType.info, NetworkManager.Singleton.LocalClientId);
-              //  Debug.Log("Space");
+            if(!chatBox.isFocused)
+            {
+                if(Input.GetKeyDown(KeyCode.Space)){
+                // SendChatMessageServerRpc("You pressed the space key!", Message.MessageType.info, NetworkManager.Singleton.LocalClientId);
+                //  Debug.Log("Space");
+                }
             }
+
         }
 
     }
-
 
     Color MessageTypeColor(Message.MessageType messageType)
     {

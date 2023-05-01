@@ -61,6 +61,7 @@ public class GameBehavior : NetworkBehaviour
             }
             string newWord = WordBank.Instance.GetRandomWord("easy");
             UpdateTurnServerRpc(newIndex, newWord, NetworkManager.Singleton.LocalClientId);
+           
 
         }
         
@@ -84,6 +85,7 @@ public class GameBehavior : NetworkBehaviour
         
         secretWord = newWord;
         WordToDrawText.text = "Draw a "+ secretWord;
+        PlayerList.Instance.setGuessedCorrect(false);
 
         if(RelayManager.Instance.getClientId() == m_Players[newIndex]){
             PlayerList.Instance.setIsArtist(true);
@@ -95,7 +97,7 @@ public class GameBehavior : NetworkBehaviour
             TakeTurnButton.interactable = false;
             WordToDrawText.gameObject.SetActive(false);
         }
-      
+        PixelArtDrawingSystem.Instance.clearGrid();
         artistIndex = newIndex;
 
         

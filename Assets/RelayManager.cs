@@ -21,7 +21,7 @@ public class RelayManager : MonoBehaviour
     private bool _inGame = false;
    
     public event EventHandler OnLeftGame;
-    public event EventHandler OnUpdatedPlayerList;
+    public event EventHandler OnAddPlayerList;
 
     private int arrLength = 0;
     private ulong[] pArray;
@@ -63,7 +63,7 @@ public class RelayManager : MonoBehaviour
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
 
-        NetworkManager.Singleton.LogLevel = LogLevel.Developer;
+        //NetworkManager.Singleton.LogLevel = LogLevel.Developer;
         NetworkManager.Singleton.NetworkConfig.EnableNetworkLogs = true;
         
     }
@@ -179,7 +179,7 @@ public class RelayManager : MonoBehaviour
         
         }
 
-        OnUpdatedPlayerList?.Invoke(this, EventArgs.Empty);
+        OnAddPlayerList?.Invoke(this, EventArgs.Empty);
         
 
     }

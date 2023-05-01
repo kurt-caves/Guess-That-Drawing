@@ -18,3 +18,103 @@ bass
 violin
 piano
 keyboard
+Cat
+Dog
+Butterfly
+Rainbow
+Flower
+Rocket
+Sun
+Moon
+Star
+Elephant
+Giraffe
+Lion
+Tiger
+Monkey
+Bear
+Fox
+Rabbit
+Deer
+Squirrel
+Bird
+Fish
+Octopus
+Crab
+Shark
+Whale
+Dolphin
+Turtle
+Frog
+Snail
+Ant
+Bee
+Ladybug
+Spider
+Worm
+Apple
+Banana
+Orange
+Strawberry
+Cherry
+Watermelon
+Pineapple
+Grapes
+Carrot
+Broccoli
+Tomato
+Potato
+Mushroom
+Pizza
+Hamburger
+French fries
+Ice cream
+Cake
+Cupcake
+Candy
+Chocolate
+Lemonade
+Milkshake
+Juice
+Tea
+Coffee
+Water
+Sandcastle
+Beach ball
+Surfboard
+Boat
+Airplane
+Helicopter
+Train
+Car
+Bus
+Bike
+Scooter
+Skateboard
+Roller skates
+Balloon
+Kite
+Teddy bear
+Doll
+Action figure
+Lego
+Puzzle
+Board game
+Soccer ball
+Basketball
+Football
+Baseball
+Hockey stick
+Skateboard
+Guitar
+Piano
+Violin
+Microphone
+Camera
+Binoculars
+Telescope
+Magnifying glass
+Hat
+Sunglasses
+Scarf
+Backpack

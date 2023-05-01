@@ -30,6 +30,14 @@ public class PixelArtDrawingSystem : NetworkBehaviour
         
     }
 
+    //added to clear grid
+    public void clearGrid(){
+        grid = new Grid<GridObject>(100, 100, CellSize, Vector3.zero, (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
+        colorUV = new Vector2(0, 0);
+        pixelArtDrawingSystemVisual.SetGrid(grid);
+
+    }
+
     private void Start() 
     {
         pixelArtDrawingSystemVisual.SetGrid(grid);
@@ -60,6 +68,8 @@ public class PixelArtDrawingSystem : NetworkBehaviour
             }
 
         }
+
+        // System.Threading.Thread.Sleep(1);
         
     }
 
@@ -162,7 +172,7 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     }
     private int GetPenSizeInt() 
     {
-        return 25;
+        return 5;
     }
     private void SetPenSizeInt() 
     {

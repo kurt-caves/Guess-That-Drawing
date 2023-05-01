@@ -13,13 +13,22 @@ public class PlayerList : NetworkBehaviour
     public static PlayerList Instance { get; private set; }
 
     [SerializeField] List<PlayerObj> playerList = new List<PlayerObj>();
+
  
     
     private int points;
     private string username;
     private ulong clientId;
     private bool isArtist;
+    private bool guessedCorrect;
 
+    public bool getGuessedCorrect(){
+        return guessedCorrect;
+    }
+
+    public void setGuessedCorrect(bool guessed){
+        guessedCorrect = guessed;
+    }
 
     public ulong getClientId(){
         return clientId;
@@ -27,10 +36,21 @@ public class PlayerList : NetworkBehaviour
 
     public void setIsArtist(bool amIArtist){
         this.isArtist = amIArtist;
+        UpdatePlayerServerRpc(username, points, isArtist, NetworkManager.Singleton.LocalClientId);
     }
 
     public bool getIsArtist(){
         return isArtist;
+    }
+
+
+    public void addPoints(int numPoints){
+        points = points+ numPoints;
+         UpdatePlayerServerRpc(username, points, isArtist, NetworkManager.Singleton.LocalClientId);
+    }
+
+    public int getPoints(){
+        return points;
     }
 
     private void Awake(){
@@ -44,49 +64,94 @@ public class PlayerList : NetworkBehaviour
         
     }
 
-    public void UpdateList()
+    public void AddList()
     {
         
-        UpdatePlayerListServerRpc(username, NetworkManager.Singleton.LocalClientId);
+        AddPlayerServerRpc(username, NetworkManager.Singleton.LocalClientId);
+       
                 
     }
 
+    public void AddPlayer()
+    {
+        
+        AddPlayerServerRpc(username, NetworkManager.Singleton.LocalClientId);
+       
+                
+    }
 
-    private void UpdatePlayer(string name, ulong senderPlayerId) {
-        /*
-        for (int i = 0; i < playerList.Count; i++){
-            Destroy(playerList[i].textObject.gameObject);
-            playerList.Remove(playerList[i]);
-        }
-*/
+    
+     
+                
+ 
+
+    [ClientRpc]
+    private void ReceivePlayerUpdateClientRpc(string name, int points, bool isArtist, ulong senderPlayerId) {
+        UpdatePlayer(name, points, isArtist,  senderPlayerId);
+        
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void UpdatePlayerServerRpc(string name, int points, bool isArtist, ulong senderPlayerId) {
+        ReceivePlayerUpdateClientRpc(name, points, isArtist,  senderPlayerId);
+    }
+
+    private void UpdatePlayer(string name, int points, bool isArtist, ulong senderPlayerId) {
         
         PlayerObj newPlayer = new PlayerObj();
-
-        newPlayer.text = name;
+       
+       if(isArtist){
+            newPlayer.text = name + " (artist) " + points;
+        }else{
+            newPlayer.text = name + " (guesser) " + points;
+        }
+      
+       
 
         GameObject  newText = Instantiate(textObject, playerPanel.transform);
         newPlayer.textObject = newText.GetComponent<TMPro.TextMeshProUGUI>();
         newPlayer.textObject.text = newPlayer.text;
        
         playerList.Add(newPlayer);
-        
-        
+
+
        
-     
-            
         
     }
 
     [ClientRpc]
-    private void ReceivePlayerUpdateClientRpc(string name, ulong senderPlayerId) {
-        UpdatePlayer(name,  senderPlayerId);
+    private void ReceivePlayerAddClientRpc(string name, ulong senderPlayerId) {
+        AddPlayer(name,  senderPlayerId);
         
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void UpdatePlayerListServerRpc(string name, ulong senderPlayerId) {
-        ReceivePlayerUpdateClientRpc(name,  senderPlayerId);
+    private void AddPlayerServerRpc(string name, ulong senderPlayerId) {
+        ReceivePlayerAddClientRpc(name,  senderPlayerId);
     }
+
+    private void AddPlayer(string name, ulong senderPlayerId) {
+        
+        PlayerObj newPlayer = new PlayerObj();
+       
+        newPlayer.text = name;
+      
+       
+
+        GameObject  newText = Instantiate(textObject, playerPanel.transform);
+        newPlayer.textObject = newText.GetComponent<TMPro.TextMeshProUGUI>();
+        newPlayer.textObject.text = newPlayer.text;
+       
+        playerList.Add(newPlayer);
+       
+        
+    }
+
+
+
+    
+
+   
 }
 
 
