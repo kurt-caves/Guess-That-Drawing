@@ -1,3 +1,4 @@
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -68,4 +69,40 @@ public class PixelArtDrawingSystemVisual : NetworkBehaviour {
         mesh.triangles = triangles;
     }
 
+    // public void pushHistory(int gridHistoryCurrentPos, int gridHistorySize, Texture2D[] gridHistory){
+    //     if(gridHistory==null){
+    //         gridHistory= new Texture2D[2]; 
+    //     }
+    //     if(gridHistorySize==gridHistory.Length){// change size of array
+
+    //         Texture2D[] newGridHistory = new Texture2D[(gridHistory.Length+1)*2];
+            
+
+    //         for(int i=0; i<gridHistoryCurrentPos; i++ ){
+    //             newGridHistory[i]=gridHistory[i];
+    //         }
+            
+    //         gridHistory = newGridHistory;
+
+    //         gridHistorySize=(gridHistory.Length+1)*2;
+    //     }
+        
+    //     Texture2D texture2D = new Texture2D(grid.GetWidth(), grid.GetHeight(), TextureFormat.ARGB32, false);
+    //         texture2D.filterMode = FilterMode.Point;
+
+    //         for (int x = 0; x < grid.GetWidth(); x++) {
+    //             for (int y = 0; y < grid.GetHeight(); y++) {
+    //                 GridObject gridObject = grid.GetGridObject(x, y);
+    //                 Vector2 pixelCoordinates = gridObject.GetColorUV();
+    //                 pixelCoordinates.x *= colorTexture2D.width;
+    //                 pixelCoordinates.y *= colorTexture2D.height;
+    //                 texture2D.SetPixel(x, y, colorTexture2D.GetPixel((int)pixelCoordinates.x, (int)pixelCoordinates.y));
+    //             }
+    //         }
+
+    //         texture2D.Apply();
+
+            
+    // }
+    
 }

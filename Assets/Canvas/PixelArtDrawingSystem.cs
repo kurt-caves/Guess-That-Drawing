@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,30 +14,41 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     
     
 
-
+    
     [SerializeField] private PixelArtDrawingSystemVisual pixelArtDrawingSystemVisual;
     [SerializeField] private Texture2D colorTexture2D;
     private Grid<GridObject> grid;
+    private int[] gridSize={100,100};
     private float CellSize = .05f;//size of grid pixel
     private string PenType ="Circle";//Circle   Square
     private string ToolType="Pen";// Pen  Eraser  Bucket
     private Vector2 colorUV;//current pen color
     private int PenSize= 15;
+    private Texture2D[] gridHistory;
+    private int gridHistorySize=1;
+    private int gridHistoryCurrentPos=0;
+
+    public event EventHandler OnColorChanged;
     
 
     private void Awake() 
     {
         Instance = this;
 
-        grid = new Grid<GridObject>(100, 100, CellSize, Vector3.zero, (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
+        grid = new Grid<GridObject>(gridSize[0], gridSize[1], CellSize, Vector3.zero, (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
         colorUV = new Vector2(0, 0);
         
     }
 
     private void Start() 
     {
+        
         pixelArtDrawingSystemVisual.SetGrid(grid);
-
+        
+        
+        
+        
+        
     }
 
 
@@ -64,85 +76,161 @@ public class PixelArtDrawingSystem : NetworkBehaviour
         }
     }
 
-    private void UpdateDrawing(Vector3 mousePosition, int penSize, Vector2 colorUV, ulong senderPlayerId) {
-
-        if(ToolType == "Bucket"){
-            Vector3 gridWorldPositionOrigin = mousePosition;
-            GridObject gridObjectOrigin = grid.GetGridObject(gridWorldPositionOrigin);
-            edgeBucket(mousePosition, gridObjectOrigin.GetColorUV());
+    public void pushHistory(){
+        if(gridHistory==null){
+            gridHistory= new Texture2D[2]; 
         }
-        else{
-            if(PenType == "Square"){
-                for (int i=0; i<4; ++i)
-                {
-                    int ix=1;
-                    int iy=1;
-                    if(i==1) ix=-1;
-                    else if(i==2) iy=-1;
-                    else if(i==3) 
-                    {
-                        ix=-1;
-                        iy=-1;
-                    }
-                    for (int x = 0; (double)x < (((double)penSize)+1.0) / 2.0; x++) {
-                        for (int y = 0; (double)y < (((double)penSize)+1.0) / 2.0; y++) {
-                            Vector3 gridWorldPosition = mousePosition + new Vector3(x*ix, y*iy) * CellSize;
-                            GridObject gridObject = grid.GetGridObject(gridWorldPosition);
-                        
-                            if (gridObject != null && ToolType=="Pen") {
-                                gridObject.SetColorUV(colorUV);
-                            }
-                            else if(gridObject != null && ToolType=="Eraser"){
-                                gridObject.SetColorUV(new Vector2(0, 0));
-                            }
-                        }
-                    }
+        if(gridHistorySize==gridHistory.Length){// change size of array
 
-                // if(grid.GetGridObject(mousePosition) != null && ToolType=="Pen"){
-                //     grid.GetGridObject(mousePosition).SetColorUV(colorUV);
-                // }
-                // else if(grid.GetGridObject(mousePosition) != null && ToolType=="Eraser"){
-                //     grid.GetGridObject(mousePosition).SetColorUV(new Vector2(0, 0));
-                // }
-                
-                } 
+            Texture2D[] newGridHistory = new Texture2D[(gridHistory.Length+1)*2];
+            
+
+            for(int i=0; i<gridHistoryCurrentPos; i++ ){
+                newGridHistory[i]=gridHistory[i];
             }
+            
+            gridHistory = newGridHistory;
+
+            gridHistorySize=(gridHistory.Length+1)*2;
+        }
         
+        Texture2D texture2D = new Texture2D(grid.GetWidth(), grid.GetHeight(), TextureFormat.ARGB32, false);
+            texture2D.filterMode = FilterMode.Point;
 
-            if(PenType == "Circle"){
-                Vector3 vec = mousePosition;
-                vec.x +=penSize;
-                vec.y +=penSize;
-                for (int i=0; i<4; ++i)
-                {
-                    int ix=1;
-                    int iy=1;
-                    if(i==1) ix=-1;
-                    else if(i==2) iy=-1;
-                    else if(i==3) 
-                    {
-                        ix=-1;
-                        iy=-1;
-                    }
-                    for (int x = 0; x < ((penSize)+1) / 2; x++) {
-                        for (int y = 0; y < ((penSize)+1) / 2; y++) {
+            for (int x = 0; x < grid.GetWidth(); x++) {
+                for (int y = 0; y < grid.GetHeight(); y++) {
+                    GridObject gridObject = grid.GetGridObject(x, y);
+                    Vector2 pixelCoordinates = gridObject.GetColorUV();
+                    pixelCoordinates.x *= colorTexture2D.width;
+                    pixelCoordinates.y *= colorTexture2D.height;
+                    texture2D.SetPixel(x, y, colorTexture2D.GetPixel((int)pixelCoordinates.x, (int)pixelCoordinates.y));
+                }
+            }
 
-                            if(3.14*(double)penSize+1.0 > x*x+y*y)
+            texture2D.Apply();
+        CanvasTools.Instance.EnableButton("undo");
+        CanvasTools.Instance.DisableButton("redo");
+            
+    }
+
+    public void pullHistory()
+    {
+        if (Input.GetKeyDown(KeyCode.T)) {
+            Texture2D texture2D = new Texture2D(1, 1, TextureFormat.ARGB32, false);
+            texture2D.filterMode = FilterMode.Point;
+
+            byte[] byteArray = gridHistory[gridHistoryCurrentPos].GetRawTextureData();
+            gridHistoryCurrentPos-=1;
+            texture2D.LoadImage(byteArray);
+
+            
+        }
+        CanvasTools.Instance.EnableButton("redo");
+        if(gridHistoryCurrentPos<=0){
+            CanvasTools.Instance.DisableButton("undo"); 
+        }
+    }
+
+
+    private void UpdateDrawing(Vector3 mousePosition, int penSize, Vector2 colorUV, ulong senderPlayerId) {
+        Vector3 gridWorldPositionA = mousePosition;
+        GridObject gridObjectA = grid.GetGridObject(gridWorldPositionA);
+        if (gridObjectA != null){
+            
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f)) {
+                colorUV = raycastHit.textureCoord;
+                OnColorChanged?.Invoke(this, EventArgs.Empty);
+            }
+            
+            if(ToolType == "Picker"){
+                pickerTool(mousePosition);
+            }
+            else {
+                pushHistory();
+                if(ToolType == "Bucket"){
+                    
+                    Vector3 gridWorldPositionOrigin = mousePosition;
+                    GridObject gridObjectOrigin = grid.GetGridObject(gridWorldPositionOrigin);
+                    edgeBucket(mousePosition, gridObjectOrigin.GetColorUV());
+                }
+                else{
+                    if(PenType == "Square"){
+                        for (int i=0; i<4; ++i)
+                        {
+                            int ix=1;
+                            int iy=1;
+                            if(i==1) ix=-1;
+                            else if(i==2) iy=-1;
+                            else if(i==3) 
                             {
-                                Vector3 gridWorldPosition = mousePosition + new Vector3(x*ix, y*iy) * CellSize;
-                                GridObject gridObject = grid.GetGridObject(gridWorldPosition);
-                        
-                                if (gridObject != null && ToolType=="Pen") {
-                                    gridObject.SetColorUV(colorUV);
+                                ix=-1;
+                                iy=-1;
+                            }
+                            for (int x = 0; (double)x < (((double)penSize)+1.0) / 2.0; x++) {
+                                for (int y = 0; (double)y < (((double)penSize)+1.0) / 2.0; y++) {
+                                    Vector3 gridWorldPosition = mousePosition + new Vector3(x*ix, y*iy) * CellSize;
+                                    GridObject gridObject = grid.GetGridObject(gridWorldPosition);
+                                
+                                    if (gridObject != null && ToolType=="Pen") {
+                                        gridObject.SetColorUV(colorUV);
+                                    }
+                                    else if(gridObject != null && ToolType=="Eraser"){
+                                        gridObject.SetColorUV(new Vector2(0, 0));
+                                    }
                                 }
-                                else if(gridObject != null && ToolType=="Eraser"){
-                                    gridObject.SetColorUV(new Vector2(0, 0));
+                            }
+
+                        // if(grid.GetGridObject(mousePosition) != null && ToolType=="Pen"){
+                        //     grid.GetGridObject(mousePosition).SetColorUV(colorUV);
+                        // }
+                        // else if(grid.GetGridObject(mousePosition) != null && ToolType=="Eraser"){
+                        //     grid.GetGridObject(mousePosition).SetColorUV(new Vector2(0, 0));
+                        // }
+                        
+                        } 
+                    }
+                }
+            
+        
+            
+
+                if(PenType == "Circle"){
+                    Vector3 vec = mousePosition;
+                    vec.x +=penSize;
+                    vec.y +=penSize;
+                    for (int i=0; i<4; ++i)
+                    {
+                        int ix=1;
+                        int iy=1;
+                        if(i==1) ix=-1;
+                        else if(i==2) iy=-1;
+                        else if(i==3) 
+                        {
+                            ix=-1;
+                            iy=-1;
+                        }
+                        for (int x = 0; x < ((penSize)+1) / 2; x++) {
+                            for (int y = 0; y < ((penSize)+1) / 2; y++) {
+
+                                if(3.14*(double)penSize+1.0 > x*x+y*y)
+                                {
+                                    Vector3 gridWorldPosition = mousePosition + new Vector3(x*ix, y*iy) * CellSize;
+                                    GridObject gridObject = grid.GetGridObject(gridWorldPosition);
+                            
+                                    if (gridObject != null && ToolType=="Pen") {
+                                        gridObject.SetColorUV(colorUV);
+                                    }
+                                    else if(gridObject != null && ToolType=="Eraser"){
+                                        gridObject.SetColorUV(new Vector2(0, 0));
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+            
         }
     }
 
@@ -190,6 +278,18 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     {
         ToolType=Type;
     }
+    public int getGridHistoryCurrentPos()
+    {
+        return gridHistoryCurrentPos;
+    }
+    public void setGridHistoryCurrentPos(int newCurrentPos)
+    {
+        gridHistoryCurrentPos = newCurrentPos;
+    }
+    public void changeColorUV(Vector2 pixelCoordinate){
+        colorUV = pixelCoordinate;
+    }
+
 
     public class GridObject // *********************************
     {
@@ -558,4 +658,16 @@ public class PixelArtDrawingSystem : NetworkBehaviour
             }
         }
     }
+
+    private void pickerTool(Vector3 mousePosition){
+        Vector3 gridWorldPosition = mousePosition;
+        GridObject gridObject = grid.GetGridObject(gridWorldPosition);
+        colorUV = gridObject.GetColorUV();
+
+        
+        CanvasTools.Instance.EnableButton("Picker");
+        CanvasTools.Instance.DisableButton("Pen");
+        SetToolType("Pen");
+    }
+    
 }
