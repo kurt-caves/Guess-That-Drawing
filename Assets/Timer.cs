@@ -17,6 +17,7 @@ public class Timer : MonoBehaviour
     }
 
     // Update is called once per frame
+    /*
     void Update()
     {
         timeElapsed += Time.deltaTime; // add the time since the last frame to the timer
@@ -26,7 +27,7 @@ public class Timer : MonoBehaviour
             // the timer has expired, do something
         }
     }
-
+*/
     void OnGUI()
     {
         float timeRemaining = timerDuration - timeElapsed;

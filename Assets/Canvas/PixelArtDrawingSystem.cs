@@ -40,6 +40,14 @@ public class PixelArtDrawingSystem : NetworkBehaviour
         
     }
 
+    //added to clear grid
+    public void clearGrid(){
+        grid = new Grid<GridObject>(100, 100, CellSize, Vector3.zero, (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
+        colorUV = new Vector2(0, 0);
+        pixelArtDrawingSystemVisual.SetGrid(grid);
+
+    }
+
     private void Start() 
     {
         
@@ -54,26 +62,31 @@ public class PixelArtDrawingSystem : NetworkBehaviour
 
     private void Update() 
     {
-        if (Input.GetKeyDown(KeyCode.B)) colorUV = new Vector2(.5f, 1);
-        if (Input.GetKeyDown(KeyCode.R)) colorUV = new Vector2(0, 1);
-        if (Input.GetKeyDown(KeyCode.G)) colorUV = new Vector2(.3f, 1f);
-        if (Input.GetKeyDown(KeyCode.W)) colorUV = new Vector2(0, 0);
-        
-
-
-        if (Input.GetMouseButtonDown(0)) 
-        {
+        if(PlayerList.Instance.getIsArtist()){ //only artist can draw
+            if (Input.GetKeyDown(KeyCode.B)) colorUV = new Vector2(.5f, 1);
+            if (Input.GetKeyDown(KeyCode.R)) colorUV = new Vector2(0, 1);
+            if (Input.GetKeyDown(KeyCode.G)) colorUV = new Vector2(.3f, 1f);
+            if (Input.GetKeyDown(KeyCode.W)) colorUV = new Vector2(0, 0);
             
-            Vector3 mousePosition = UtilsClass.GetMouseWorldPosition();
 
 
-            int penSize = GetPenSizeInt();
-            
-            //added for multiplayer
-            UpdateDrawingServerRpc(mousePosition, penSize, colorUV, NetworkManager.Singleton.LocalClientId);
+            if (Input.GetMouseButtonDown(0)) 
+            {
+                Vector3 mousePosition = UtilsClass.GetMouseWorldPosition();
 
+
+                int penSize = GetPenSizeInt();
+                
+                //added for multiplayer
+                UpdateDrawingServerRpc(mousePosition, penSize, colorUV, NetworkManager.Singleton.LocalClientId);
+
+
+            }
 
         }
+
+        // System.Threading.Thread.Sleep(1);
+        
     }
 
     public void pushHistory(){

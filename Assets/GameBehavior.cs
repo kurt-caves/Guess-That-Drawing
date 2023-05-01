@@ -3,58 +3,140 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Unity.Netcode;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameBehavior : NetworkBehaviour
 {
-    /*
-    private  NetworkVariable<int> _artistIndex = new NetworkVariable<int>();
-    private const int  _startIndex = 0;
+    public event EventHandler OnTookTurn;
+    [SerializeField] private Button TakeTurnButton;
+    [SerializeField] private TextMeshProUGUI WordToDrawText;
+    
+    ulong[] m_Players;
+    int numPlayers;
+    string secretWord;
 
-    public override void OnNetworkSpawn(){
-        if (IsServer){
-            _artistIndex.Value = _startIndex;
-           
+
+    private int artistIndex;
+    
+    public static GameBehavior Instance { get; private set; }
+
+    public int getNumPlayers(){
+        return numPlayers;
+    }
+
+    public string getSecretWord(){
+        return secretWord;
+    }
+    
+    private void Awake()
+    {
+        Instance = this;
+        artistIndex = 0;
+        /*
+        if(TestLobby.Instance.IsLobbyHost()){
+            PlayerList.Instance.setIsArtist(true);
+            TakeTurnButton.interactable = true;
+        }else{
+            PlayerList.Instance.setIsArtist(false);
+            TakeTurnButton.interactable = false;
+        }
+        */
+        TakeTurnButton.onClick.AddListener(() => {
+            TakeTurn();
         
+        });
+
+        TakeTurn();
+    }
+
+    public void TakeTurn()
+    {
+        if (numPlayers >= 1){
+            
+            int newIndex = artistIndex + 1;
+            if(newIndex >= numPlayers){
+                newIndex = 0;
+                
+            }
+            string newWord = WordBank.Instance.GetRandomWord("easy");
+            UpdateTurnServerRpc(newIndex, newWord, NetworkManager.Singleton.LocalClientId);
+           
+
         }
-        else{
-            _artistIndex.OnValueChanged += OnSomeValueChanged;
+        
+     
+       
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void  UpdateTurnServerRpc(int newIndex, string newWord, ulong senderPlayerId) {
+        ReceiveTurnUpdateClientRpc(newIndex, newWord,  senderPlayerId);
+        
+    }
+
+    [ClientRpc]
+    private void ReceiveTurnUpdateClientRpc( int newIndex, string newWord, ulong senderPlayerId) {
+        UpdateTurn(newIndex, newWord,  senderPlayerId);
+        
+    }
+   
+    private void UpdateTurn(int newIndex, string newWord, ulong senderPlayerId) {
+        
+        secretWord = newWord;
+        WordToDrawText.text = "Draw a "+ secretWord;
+        PlayerList.Instance.setGuessedCorrect(false);
+
+        if(RelayManager.Instance.getClientId() == m_Players[newIndex]){
+            PlayerList.Instance.setIsArtist(true);
+            TakeTurnButton.interactable = true;
+            WordToDrawText.gameObject.SetActive(true);
+
+        }else{
+            PlayerList.Instance.setIsArtist(false);
+            TakeTurnButton.interactable = false;
+            WordToDrawText.gameObject.SetActive(false);
         }
+        PixelArtDrawingSystem.Instance.clearGrid();
+        artistIndex = newIndex;
+
+        
+        
+
+        OnTookTurn?.Invoke(this, EventArgs.Empty);
+    }
+   
+    public void UpdateList(ulong[] pArray, int arrLength) {
+        
+        UpdateListServerRpc(pArray, arrLength, NetworkManager.Singleton.LocalClientId);
         
     }
     
 
-    private void OnSomeValueChanged(int previous, int current){
-       // Debug.Log("The artist is "+myArtistIndex);
-        Debug.Log($"Detected NetworkVariable Change: Previous: {previous} | Current: {current}");
+    [ServerRpc(RequireOwnership = false)]
+    private void  UpdateListServerRpc( ulong[] pArray, int arrLength, ulong senderPlayerId) {
+        ReceiveListUpdateClientRpc(pArray, arrLength, senderPlayerId);
+        
     }
 
-
-    void OnTakeTurn()
-    {
-        int newIndex = 5;
+    [ClientRpc]
+    private void ReceiveListUpdateClientRpc(  ulong[] pArray, int arrLength, ulong senderPlayerId) {
+        UpdateList(pArray, arrLength,  senderPlayerId);
         
-        List<ulong> myPlayers = RelayManager.Instance.GetPlayerList();
-        //int newIndex = _artistIndex;
-        if(newIndex > myPlayers.Count -1){
-            newIndex ++;
-            
-        }else{
-            newIndex = 0;
+    }
+   
+    private void UpdateList(ulong[] pArray, int arrLength, ulong senderPlayerId) {
+        m_Players = pArray;
+        numPlayers = arrLength;
+
+        Debug.Log("My list");
+        for(int i = 0; i < numPlayers; i++)
+        {
+            Debug.Log(m_Players[i]);
         }
-        
-        OnTurnChangedRpc(artistIndex: newIndex);
+      
     }
+   
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    [ServerRpc]
-    private void OnTurnChangedRpc(int artistIndex){
-
-    }
-   */
 
 }
