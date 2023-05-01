@@ -1,8 +1,4 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/frontpage.uss?fileID=7433441132597879392&amp;guid=138c60918650132c48f127d1bca92c36&amp;type=3#frontpage" />
-    <ui:VisualElement name="container" style="flex-grow: 1; align-items: center; justify-content: center; background-color: rgb(39, 164, 242);">
-        <ui:Button text="PLAY" display-tooltip-when-elided="true" style="width: 30%; padding-bottom: 1px; margin-bottom: 1px; margin-left: auto; margin-top: auto; margin-right: auto; top: 10px; height: 10%; background-color: rgb(3, 140, 76);" />
-        <ui:Label text="Guess That Drawing" display-tooltip-when-elided="true" style="justify-content: flex-start; color: rgb(242, 92, 5); -unity-text-align: upper-center; font-size: 40px; top: auto; bottom: 400px;" />
-        <ui:TextField picking-mode="Ignore" label="Welcome to Guess That Drawing! " value="filler text" text="filler text" style="bottom: 400px; align-items: flex-end; justify-content: center; -unity-text-align: upper-center;" />
-    </ui:VisualElement>
+    <ui:VisualElement name="container" style="flex-grow: 1; align-items: center; justify-content: center; background-image: url(&apos;project://database/Assets/Guess%20That%20Drawing.png?fileID=2800000&amp;guid=2b13e1f79a4ae3e7992eb4623fcc18d5&amp;type=3#Guess That Drawing&apos;);" />
 </ui:UXML>
