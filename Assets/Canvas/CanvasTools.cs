@@ -35,20 +35,20 @@ public class CanvasTools : MonoBehaviour
         CanvasTools.Instance.DisableButton("Circle");
 
         
-        redo.onClick.AddListener(() => {
-            PixelArtDrawingSystem.Instance.pushHistory();
-        });
-        undo.onClick.AddListener(() => {
-            PixelArtDrawingSystem.Instance.pullHistory();
-        });
+        // redo.onClick.AddListener(() => {
+        //     PixelArtDrawingSystem.Instance.pushHistory();
+        // });
+        // undo.onClick.AddListener(() => {
+        //     PixelArtDrawingSystem.Instance.pullHistory();
+        // });
 
-        Picker.onClick.AddListener(() => {
-            PixelArtDrawingSystem.Instance.SetToolType("Picker" );
-            EnableButton("Bucket");
-            EnableButton("Pen");
-            EnableButton("Eraser");
-            DisableButton("Picker");
-        });
+        // Picker.onClick.AddListener(() => {
+        //     PixelArtDrawingSystem.Instance.SetToolType("Picker" );
+        //     EnableButton("Bucket");
+        //     EnableButton("Pen");
+        //     EnableButton("Eraser");
+        //     DisableButton("Picker");
+        // });
 
         BucketFill.onClick.AddListener(() => {
             PixelArtDrawingSystem.Instance.SetToolType("Bucket" );
@@ -97,12 +97,12 @@ public class CanvasTools : MonoBehaviour
     }
 
     public void DisableButton (string button) {
-        if(button == "undo"){
-            undo.interactable = false;
-        }
-        if(button == "redo"){
-            redo.interactable = false;
-        }
+        // if(button == "undo"){
+        //     undo.interactable = false;
+        // }
+        // if(button == "redo"){
+        //     redo.interactable = false;
+        // }
         if(button == "Square"){
             PenSquare.interactable = false;
         }
@@ -118,18 +118,18 @@ public class CanvasTools : MonoBehaviour
         if(button == "Bucket"){
             BucketFill.interactable = false;
         }
-        if(button == "Picker"){
-            Picker.interactable = false;
-        }
+        // if(button == "Picker"){
+        //     Picker.interactable = false;
+        // }
        
     }
     public void EnableButton (string button) {
-        if(button == "undo"){
-            undo.interactable = true;
-        } 
-        if(button == "redo"){
-            redo.interactable = true;
-        }
+        // if(button == "undo"){
+        //     undo.interactable = true;
+        // } 
+        // if(button == "redo"){
+        //     redo.interactable = true;
+        // }
         if(button == "Square"){
             PenSquare.interactable = true;
         }
@@ -145,9 +145,9 @@ public class CanvasTools : MonoBehaviour
         if(button == "Bucket"){
             BucketFill.interactable = true;
         }
-        if(button == "Picker"){
-            Picker.interactable = true;
-        }
+        // if(button == "Picker"){
+        //     Picker.interactable = true;
+        // }
        
     }
 
