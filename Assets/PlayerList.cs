@@ -63,7 +63,7 @@ public class PlayerList : NetworkBehaviour
 
         
     }
-
+/*
     public void AddList()
     {
         
@@ -72,18 +72,8 @@ public class PlayerList : NetworkBehaviour
                 
     }
 
-    public void AddPlayer()
-    {
-        
-        AddPlayerServerRpc(username, NetworkManager.Singleton.LocalClientId);
-       
-                
-    }
+*/
 
-    
-     
-                
- 
 
     [ClientRpc]
     private void ReceivePlayerUpdateClientRpc(string name, int points, bool isArtist, ulong senderPlayerId) {
@@ -118,7 +108,7 @@ public class PlayerList : NetworkBehaviour
        
         
     }
-
+    /*
     [ClientRpc]
     private void ReceivePlayerAddClientRpc(string name, ulong senderPlayerId) {
         AddPlayer(name,  senderPlayerId);
@@ -146,7 +136,7 @@ public class PlayerList : NetworkBehaviour
        
         
     }
-
+    */
 
 
     

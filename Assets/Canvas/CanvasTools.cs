@@ -13,13 +13,13 @@ public class CanvasTools : MonoBehaviour
     [SerializeField] private Button Eraser;
     [SerializeField] private Button PenSquare;
     [SerializeField] private Button PenCircle;
-    [SerializeField] private Button undo;
-    [SerializeField] private Button redo;
-    [SerializeField] private Button Picker;
+    //[SerializeField] private Button undo;
+    //[SerializeField] private Button redo;
+    //[SerializeField] private Button Picker;
 
     [SerializeField] private TMPro.TMP_InputField penBox;
 
-    [SerializeField] private Texture2D colorTexture2D;
+    //[SerializeField] private Texture2D colorTexture2D;
     [SerializeField] private Vector2 colorUV;
     
     private void Start() {
@@ -30,7 +30,7 @@ public class CanvasTools : MonoBehaviour
     private void Awake() {
         penBox.text="15";
         Instance = this;
-        CanvasTools.Instance.DisableButton("undo");
+       // CanvasTools.Instance.DisableButton("undo");
         CanvasTools.Instance.DisableButton("Pen");
         CanvasTools.Instance.DisableButton("Circle");
 
@@ -55,7 +55,7 @@ public class CanvasTools : MonoBehaviour
             DisableButton("Bucket");
             EnableButton("Pen");
             EnableButton("Eraser");
-            EnableButton("Picker");
+           // EnableButton("Picker");
         });
 
         Pen.onClick.AddListener(() => {
@@ -63,7 +63,7 @@ public class CanvasTools : MonoBehaviour
             DisableButton("Pen");
             EnableButton("Bucket");
             EnableButton("Eraser");
-            EnableButton("Picker");
+           // EnableButton("Picker");
         });
 
         Eraser.onClick.AddListener(() => {
@@ -71,7 +71,7 @@ public class CanvasTools : MonoBehaviour
             DisableButton("Eraser");
             EnableButton("Bucket");
             EnableButton("Pen");
-            EnableButton("Picker");
+           // EnableButton("Picker");
         });
 
         PenSquare.onClick.AddListener(() => {
@@ -153,8 +153,8 @@ public class CanvasTools : MonoBehaviour
 
     private void UpdateSelectedColor() {
         Vector2 pixelCoordinate = PixelArtDrawingSystem.Instance.GetColorUV();
-        pixelCoordinate.x *= colorTexture2D.width;
-        pixelCoordinate.y *= colorTexture2D.height;
+        //pixelCoordinate.x *= colorTexture2D.width;
+        //pixelCoordinate.y *= colorTexture2D.height;
         PixelArtDrawingSystem.Instance.changeColorUV(pixelCoordinate);
         //PixelArtDrawingSystem.Instance.SetColorUV(pixelCoordinate);
     }

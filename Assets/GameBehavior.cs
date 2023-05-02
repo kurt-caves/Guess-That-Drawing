@@ -9,17 +9,20 @@ using TMPro;
 public class GameBehavior : NetworkBehaviour
 {
     public event EventHandler OnTookTurn;
-    [SerializeField] private Button TakeTurnButton;
     [SerializeField] private TextMeshProUGUI WordToDrawText;
-    
+    bool startedGame = false;
     ulong[] m_Players;
     int numPlayers;
     string secretWord;
-
+    int numGuessed;
 
     private int artistIndex;
     
     public static GameBehavior Instance { get; private set; }
+
+    public int getNumGuessed(){
+        return numGuessed;
+    }
 
     public int getNumPlayers(){
         return numPlayers;
@@ -33,22 +36,40 @@ public class GameBehavior : NetworkBehaviour
     {
         Instance = this;
         artistIndex = 0;
-        /*
-        if(TestLobby.Instance.IsLobbyHost()){
-            PlayerList.Instance.setIsArtist(true);
-            TakeTurnButton.interactable = true;
-        }else{
-            PlayerList.Instance.setIsArtist(false);
-            TakeTurnButton.interactable = false;
-        }
-        */
-        TakeTurnButton.onClick.AddListener(() => {
-            TakeTurn();
         
-        });
-
-        TakeTurn();
     }
+
+    public void incNumGuessed(){
+        UpdateNumGuessedServerRpc(numGuessed + 1, NetworkManager.Singleton.LocalClientId);
+    }
+
+
+    [ServerRpc(RequireOwnership = false)]
+    private void   UpdateNumGuessedServerRpc(int numGuessed, ulong senderPlayerId) {
+        ReceiveNumGuessedUpdateClientRpc(numGuessed,  senderPlayerId);
+        
+    }
+
+    [ClientRpc]
+    private void ReceiveNumGuessedUpdateClientRpc( int numGuessed, ulong senderPlayerId) {
+        UpdateNumGuessed(numGuessed, senderPlayerId);
+        
+    }
+   
+    private void UpdateNumGuessed(int numGuessed, ulong senderPlayerId) {
+        this.numGuessed = numGuessed;
+        if(RelayManager.Instance.getClientId() == m_Players[artistIndex]){
+            PlayerList.Instance.addPoints(1);
+
+
+            if (numGuessed >= numPlayers-1){
+                TakeTurn();
+            }
+        }
+       
+    }
+
+
 
     public void TakeTurn()
     {
@@ -83,24 +104,31 @@ public class GameBehavior : NetworkBehaviour
    
     private void UpdateTurn(int newIndex, string newWord, ulong senderPlayerId) {
         
-        secretWord = newWord;
+        //pick a new secret word
+        secretWord = newWord; 
         WordToDrawText.text = "Draw a "+ secretWord;
         PlayerList.Instance.setGuessedCorrect(false);
-
+        
+        // choose a new artist
         if(RelayManager.Instance.getClientId() == m_Players[newIndex]){
             PlayerList.Instance.setIsArtist(true);
-            TakeTurnButton.interactable = true;
             WordToDrawText.gameObject.SetActive(true);
 
         }else{
             PlayerList.Instance.setIsArtist(false);
-            TakeTurnButton.interactable = false;
             WordToDrawText.gameObject.SetActive(false);
         }
-        PixelArtDrawingSystem.Instance.clearGrid();
-        artistIndex = newIndex;
 
-        
+        // clear the drawing board
+        PixelArtDrawingSystem.Instance.clearGrid(); 
+        artistIndex = newIndex; 
+
+        //reset the number of correct guesses
+        numGuessed = 0;
+
+        //reset the timer
+        Timer.Instance.StartTimer();
+
         
 
         OnTookTurn?.Invoke(this, EventArgs.Empty);
@@ -133,6 +161,12 @@ public class GameBehavior : NetworkBehaviour
         for(int i = 0; i < numPlayers; i++)
         {
             Debug.Log(m_Players[i]);
+        }
+
+        if(numPlayers >=  TestLobby.Instance.GetJoinedLobby().Players.Count&& TestLobby.Instance.IsLobbyHost() && startedGame == false){
+            startedGame = true;
+            TakeTurn();
+            
         }
       
     }

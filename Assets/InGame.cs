@@ -21,7 +21,7 @@ public class InGame : MonoBehaviour
         TestLobby.Instance.OnJoinedLobby += UpdateLobby_Event;
         TestLobby.Instance.OnJoinedLobbyUpdate += UpdateLobby_Event;
         RelayManager.Instance.OnLeftGame += LeaveGame_Event;
-        RelayManager.Instance.OnAddPlayerList +=  AddPlayerList_Event;
+       // RelayManager.Instance.OnAddPlayerList +=  AddPlayerList_Event;
         
         Hide();
     }
@@ -37,17 +37,17 @@ public class InGame : MonoBehaviour
             LobbySetup.Instance.Show();
        
     }
-
+/*
      private void AddPlayerList_Event(object sender, EventArgs e) {
         AddPlayerList();
     }
     
     private void  AddPlayerList() {
-        PlayerList.Instance.AddList();
+       // PlayerList.Instance.AddList();
     
      
     }
-
+*/
     private void Awake()
     {
         Instance = this;

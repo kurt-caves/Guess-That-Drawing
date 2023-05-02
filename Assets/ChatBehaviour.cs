@@ -54,10 +54,11 @@ public class ChatBehaviour : NetworkBehaviour
             if(Input.GetKeyDown(KeyCode.Return))
             {
             
-                if(chatBox.text.Equals(GameBehavior.Instance.getSecretWord())){
+                if(chatBox.text.Equals(GameBehavior.Instance.getSecretWord(),StringComparison.OrdinalIgnoreCase)){
                     if(PlayerList.Instance.getGuessedCorrect() == false){
                         PlayerList.Instance.addPoints(2);
                         PlayerList.Instance.setGuessedCorrect(true);
+                        GameBehavior.Instance.incNumGuessed();
                         SendChatMessageServerRpc(username + " guessed the word!", Message.MessageType.info, NetworkManager.Singleton.LocalClientId);
                         chatBox.text = "";
                     }
