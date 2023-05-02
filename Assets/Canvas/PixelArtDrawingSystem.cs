@@ -18,6 +18,7 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     [SerializeField] private PixelArtDrawingSystemVisual pixelArtDrawingSystemVisual;
     [SerializeField] private Texture2D colorTexture2D;
     private Grid<GridObject> grid;
+    private Grid<GridObject> colorPicker;
     private int[] gridSize={100,100};
     private float CellSize = .05f;//size of grid pixel
     private string PenType ="Circle";//Circle   Square
@@ -36,6 +37,8 @@ public class PixelArtDrawingSystem : NetworkBehaviour
         Instance = this;
 
         grid = new Grid<GridObject>(gridSize[0], gridSize[1], CellSize, Vector3.zero, (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
+        colorPicker = new Grid<GridObject>(255, 255, CellSize, new Vector3(-397, -256, 0), (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
+
         colorUV = new Vector2(0, 0);
         
     }
@@ -148,6 +151,7 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     private void UpdateDrawing(Vector3 mousePosition, int penSize, Vector2 colorUV, ulong senderPlayerId) {
         Vector3 gridWorldPositionA = mousePosition;
         GridObject gridObjectA = grid.GetGridObject(gridWorldPositionA);
+        
         if (gridObjectA != null){
             
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -155,6 +159,7 @@ public class PixelArtDrawingSystem : NetworkBehaviour
                 colorUV = raycastHit.textureCoord;
                 OnColorChanged?.Invoke(this, EventArgs.Empty);
             }
+            
             
             if(ToolType == "Picker"){
                 pickerTool(mousePosition);

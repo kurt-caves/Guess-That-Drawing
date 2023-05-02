@@ -15,9 +15,9 @@ public class CanvasTools : MonoBehaviour
     [SerializeField] private Button PenCircle;
     //[SerializeField] private Button undo;
     //[SerializeField] private Button redo;
-    //[SerializeField] private Button Picker;
+    [SerializeField] private Button Picker;
 
-    [SerializeField] private TMPro.TMP_InputField penBox;
+    [SerializeField] private Slider penBox;
 
     //[SerializeField] private Texture2D colorTexture2D;
     [SerializeField] private Vector2 colorUV;
@@ -28,7 +28,7 @@ public class CanvasTools : MonoBehaviour
         UpdateSelectedColor();
     }
     private void Awake() {
-        penBox.text="15";
+        
         Instance = this;
        // CanvasTools.Instance.DisableButton("undo");
         CanvasTools.Instance.DisableButton("Pen");
@@ -42,20 +42,20 @@ public class CanvasTools : MonoBehaviour
         //     PixelArtDrawingSystem.Instance.pullHistory();
         // });
 
-        // Picker.onClick.AddListener(() => {
-        //     PixelArtDrawingSystem.Instance.SetToolType("Picker" );
-        //     EnableButton("Bucket");
-        //     EnableButton("Pen");
-        //     EnableButton("Eraser");
-        //     DisableButton("Picker");
-        // });
+        Picker.onClick.AddListener(() => {
+            PixelArtDrawingSystem.Instance.SetToolType("Picker" );
+            EnableButton("Bucket");
+            EnableButton("Pen");
+            EnableButton("Eraser");
+            DisableButton("Picker");
+        });
 
         BucketFill.onClick.AddListener(() => {
             PixelArtDrawingSystem.Instance.SetToolType("Bucket" );
             DisableButton("Bucket");
             EnableButton("Pen");
             EnableButton("Eraser");
-           // EnableButton("Picker");
+            EnableButton("Picker");
         });
 
         Pen.onClick.AddListener(() => {
@@ -63,7 +63,7 @@ public class CanvasTools : MonoBehaviour
             DisableButton("Pen");
             EnableButton("Bucket");
             EnableButton("Eraser");
-           // EnableButton("Picker");
+            EnableButton("Picker");
         });
 
         Eraser.onClick.AddListener(() => {
@@ -71,7 +71,7 @@ public class CanvasTools : MonoBehaviour
             DisableButton("Eraser");
             EnableButton("Bucket");
             EnableButton("Pen");
-           // EnableButton("Picker");
+            EnableButton("Picker");
         });
 
         PenSquare.onClick.AddListener(() => {
@@ -89,10 +89,10 @@ public class CanvasTools : MonoBehaviour
 
     }
     private void Update() {
-        if(penBox.text != null && penBox.text != "")
-        {
-            PixelArtDrawingSystem.Instance.SetPenSizeInt(int.Parse(penBox.text));
-        }
+        
+        
+        PixelArtDrawingSystem.Instance.SetPenSizeInt((int) penBox.value);
+        
         
     }
 
@@ -118,9 +118,9 @@ public class CanvasTools : MonoBehaviour
         if(button == "Bucket"){
             BucketFill.interactable = false;
         }
-        // if(button == "Picker"){
-        //     Picker.interactable = false;
-        // }
+        if(button == "Picker"){
+            Picker.interactable = false;
+        }
        
     }
     public void EnableButton (string button) {
@@ -145,18 +145,15 @@ public class CanvasTools : MonoBehaviour
         if(button == "Bucket"){
             BucketFill.interactable = true;
         }
-        // if(button == "Picker"){
-        //     Picker.interactable = true;
-        // }
+        if(button == "Picker"){
+            Picker.interactable = true;
+        }
        
     }
 
     private void UpdateSelectedColor() {
         Vector2 pixelCoordinate = PixelArtDrawingSystem.Instance.GetColorUV();
-        //pixelCoordinate.x *= colorTexture2D.width;
-        //pixelCoordinate.y *= colorTexture2D.height;
         PixelArtDrawingSystem.Instance.changeColorUV(pixelCoordinate);
-        //PixelArtDrawingSystem.Instance.SetColorUV(pixelCoordinate);
     }
 
     private void PixelArtDrawingSystem_OnColorChanged(object sender, System.EventArgs e) {
