@@ -19,13 +19,15 @@ public class CanvasTools : MonoBehaviour
 
     [SerializeField] private Slider penBox;
 
-    //[SerializeField] private Texture2D colorTexture2D;
+    [SerializeField] private Texture2D colorTexture2D;
     [SerializeField] private Vector2 colorUV;
+    
     
     private void Start() {
         PixelArtDrawingSystem.Instance.OnColorChanged += PixelArtDrawingSystem_OnColorChanged;
 
         UpdateSelectedColor();
+
     }
     private void Awake() {
         
@@ -159,5 +161,7 @@ public class CanvasTools : MonoBehaviour
     private void PixelArtDrawingSystem_OnColorChanged(object sender, System.EventArgs e) {
         UpdateSelectedColor();
     }
+    
+
     
 }

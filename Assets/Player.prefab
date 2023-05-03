@@ -623,7 +623,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5349564558887470573}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &969894787386538213
 MonoBehaviour:
@@ -723,7 +723,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.0152034275}
   m_AnchorMax: {x: 0.88000005, y: 0.045558885}
-  m_AnchoredPosition: {x: 12.000069, y: -4.0045166}
+  m_AnchoredPosition: {x: 11.999985, y: -4.0045166}
   m_SizeDelta: {x: 24, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &2887071354484719356
@@ -929,18 +929,18 @@ RectTransform:
   m_GameObject: {fileID: 1688923587022056945}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.755, y: 0.755, z: 0.755}
+  m_LocalScale: {x: 1.0579437, y: 1.0579437, z: 1.0579437}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6602599088843449605}
   - {fileID: 5657700412062703672}
   - {fileID: 7599312456310027880}
-  m_Father: {fileID: 7100946868964880004}
-  m_RootOrder: 11
+  m_Father: {fileID: 5349564558887470573}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 723, y: 117.5}
+  m_AnchoredPosition: {x: 1013.10376, y: 164.64687}
   m_SizeDelta: {x: 200, y: 301.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4696468753573125443
@@ -1054,9 +1054,8 @@ RectTransform:
   - {fileID: 2946478241691443407}
   - {fileID: 7154388995668663637}
   - {fileID: 7265037624779118413}
-  - {fileID: 5149494881832430814}
   m_Father: {fileID: 5349564558887470573}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1143,6 +1142,7 @@ MonoBehaviour:
   PenCircle: {fileID: 3521074215391464626}
   Picker: {fileID: 1735014838017549659}
   penBox: {fileID: 2955982180684901571}
+  colorTexture2D: {fileID: 0}
   colorUV: {x: 0, y: 0}
 --- !u!1 &1857156295168870408
 GameObject:
@@ -1806,7 +1806,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.90000004, y: 1}
-  m_AnchoredPosition: {x: 9.999953, y: -0.000061035156}
+  m_AnchoredPosition: {x: 10.000073, y: -0.000061035156}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &8170179012181031068
@@ -2599,8 +2599,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 508915807817513435}
   m_HandleRect: {fileID: 1136488642418574518}
   m_Direction: 0
-  m_Value: 1
-  m_Size: 0.99999994
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2942,6 +2942,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5149494881832430814}
   - {fileID: 969894787386538212}
   - {fileID: 4128667180283892697}
   - {fileID: 7100946868964880004}
@@ -3048,6 +3049,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pixelArtDrawingSystemVisual: {fileID: 969894787386538213}
+  colorPickerVisual: {fileID: 0}
   colorTexture2D: {fileID: 2800000, guid: e2b8c24d083dee94ab5ccdb80b7ef715, type: 3}
 --- !u!114 &1438750986098855250
 MonoBehaviour:
@@ -3212,8 +3214,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3450244431763223150}
   m_HandleRect: {fileID: 3586607078783445404}
   m_Direction: 0
-  m_Value: 1
-  m_Size: 0.99999994
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4217,7 +4219,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5349564558887470573}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
