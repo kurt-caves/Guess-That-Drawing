@@ -6,7 +6,7 @@ using UnityEngine;
 using CodeMonkey.Utils; 
 using Unity.Netcode;
 
-public class PixelArtDrawingSystem : NetworkBehaviour
+public class PixelArtDrawingSystem : NetworkBehaviour 
 {
 
     public static PixelArtDrawingSystem Instance { get; private set; }
@@ -37,7 +37,8 @@ public class PixelArtDrawingSystem : NetworkBehaviour
         Instance = this;
 
         grid = new Grid<GridObject>(gridSize[0], gridSize[1], CellSize, Vector3.zero, (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
-        
+        colorPicker = new Grid<GridObject>(255, 255, CellSize, new Vector3(-397, -256, 0), (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
+
         colorUV = new Vector2(0, 0);
         
     }
@@ -59,7 +60,6 @@ public class PixelArtDrawingSystem : NetworkBehaviour
         
         
         
-        
     }
 
 
@@ -72,10 +72,9 @@ public class PixelArtDrawingSystem : NetworkBehaviour
             if (Input.GetKeyDown(KeyCode.W)) colorUV = new Vector2(0, 0);
             
 
-            
-            if (Input.GetMouseButton(0)) 
+
+            if (Input.GetMouseButtonDown(0)) 
             {
-                
                 Vector3 mousePosition = UtilsClass.GetMouseWorldPosition();
 
 
@@ -93,60 +92,60 @@ public class PixelArtDrawingSystem : NetworkBehaviour
         
     }
 
-    // public void pushHistory(){
-    //     if(gridHistory==null){
-    //         gridHistory= new Texture2D[2]; 
-    //     }
-    //     if(gridHistorySize==gridHistory.Length){// change size of array
+    public void pushHistory(){
+        if(gridHistory==null){
+            gridHistory= new Texture2D[2]; 
+        }
+        if(gridHistorySize==gridHistory.Length){// change size of array
 
-    //         Texture2D[] newGridHistory = new Texture2D[(gridHistory.Length+1)*2];
+            Texture2D[] newGridHistory = new Texture2D[(gridHistory.Length+1)*2];
             
 
-    //         for(int i=0; i<gridHistoryCurrentPos; i++ ){
-    //             newGridHistory[i]=gridHistory[i];
-    //         }
+            for(int i=0; i<gridHistoryCurrentPos; i++ ){
+                newGridHistory[i]=gridHistory[i];
+            }
             
-    //         gridHistory = newGridHistory;
+            gridHistory = newGridHistory;
 
-    //         gridHistorySize=(gridHistory.Length+1)*2;
-    //     }
+            gridHistorySize=(gridHistory.Length+1)*2;
+        }
         
-    //     Texture2D texture2D = new Texture2D(grid.GetWidth(), grid.GetHeight(), TextureFormat.ARGB32, false);
-    //         texture2D.filterMode = FilterMode.Point;
+        Texture2D texture2D = new Texture2D(grid.GetWidth(), grid.GetHeight(), TextureFormat.ARGB32, false);
+            texture2D.filterMode = FilterMode.Point;
 
-    //         for (int x = 0; x < grid.GetWidth(); x++) {
-    //             for (int y = 0; y < grid.GetHeight(); y++) {
-    //                 GridObject gridObject = grid.GetGridObject(x, y);
-    //                 Vector2 pixelCoordinates = gridObject.GetColorUV();
-    //                 pixelCoordinates.x *= colorTexture2D.width;
-    //                 pixelCoordinates.y *= colorTexture2D.height;
-    //                 texture2D.SetPixel(x, y, colorTexture2D.GetPixel((int)pixelCoordinates.x, (int)pixelCoordinates.y));
-    //             }
-    //         }
+            for (int x = 0; x < grid.GetWidth(); x++) {
+                for (int y = 0; y < grid.GetHeight(); y++) {
+                    GridObject gridObject = grid.GetGridObject(x, y);
+                    Vector2 pixelCoordinates = gridObject.GetColorUV();
+                    pixelCoordinates.x *= colorTexture2D.width;
+                    pixelCoordinates.y *= colorTexture2D.height;
+                    texture2D.SetPixel(x, y, colorTexture2D.GetPixel((int)pixelCoordinates.x, (int)pixelCoordinates.y));
+                }
+            }
 
-    //         texture2D.Apply();
-    //     CanvasTools.Instance.EnableButton("undo");
-    //     CanvasTools.Instance.DisableButton("redo");
+            texture2D.Apply();
+        CanvasTools.Instance.EnableButton("undo");
+        CanvasTools.Instance.DisableButton("redo");
             
-    // }
+    }
 
-    // public void pullHistory()
-    // {
-    //     if (Input.GetKeyDown(KeyCode.T)) {
-    //         Texture2D texture2D = new Texture2D(1, 1, TextureFormat.ARGB32, false);
-    //         texture2D.filterMode = FilterMode.Point;
+    public void pullHistory()
+    {
+        if (Input.GetKeyDown(KeyCode.T)) {
+            Texture2D texture2D = new Texture2D(1, 1, TextureFormat.ARGB32, false);
+            texture2D.filterMode = FilterMode.Point;
 
-    //         byte[] byteArray = gridHistory[gridHistoryCurrentPos].GetRawTextureData();
-    //         gridHistoryCurrentPos-=1;
-    //         texture2D.LoadImage(byteArray);
+            byte[] byteArray = gridHistory[gridHistoryCurrentPos].GetRawTextureData();
+            gridHistoryCurrentPos-=1;
+            texture2D.LoadImage(byteArray);
 
             
-    //     }
-    //     CanvasTools.Instance.EnableButton("redo");
-    //     if(gridHistoryCurrentPos<=0){
-    //         CanvasTools.Instance.DisableButton("undo"); 
-    //     }
-    // }
+        }
+        CanvasTools.Instance.EnableButton("redo");
+        if(gridHistoryCurrentPos<=0){
+            CanvasTools.Instance.DisableButton("undo"); 
+        }
+    }
 
 
     private void UpdateDrawing(Vector3 mousePosition, int penSize, Vector2 colorUV, ulong senderPlayerId) {
@@ -166,7 +165,7 @@ public class PixelArtDrawingSystem : NetworkBehaviour
                 pickerTool(mousePosition);
             }
             else {
-                //pushHistory();
+                pushHistory();
                 if(ToolType == "Bucket"){
                     
                     Vector3 gridWorldPositionOrigin = mousePosition;
