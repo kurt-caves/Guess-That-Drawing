@@ -1,16 +1,28 @@
+﻿/* 
+    ------------------- Code Monkey -------------------
+
+    Thank you for downloading this package
+    I hope you find it useful in your projects
+    If you have any questions let me know
+    Cheers!
+
+               unitycodemonkey.com
+    --------------------------------------------------
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
 
-    public class PixelArtDrawingSystemVisual : MonoBehaviour {
+    public class DrawPixelsVisual : MonoBehaviour {
 
-        [SerializeField] private  PixelArtDrawingSystem drawPixels;
+        [SerializeField] private DrawPixels drawPixels;
 
-        public static  PixelArtDrawingSystemVisual Instance { get; private set; } //added
+        public static DrawPixelsVisual Instance { get; private set; } //added
 
-        private Grid< PixelArtDrawingSystem.GridObject> grid;
+        private Grid<DrawPixels.PixelGridObject> grid;
         private Mesh mesh;
         private bool updateMesh;
 
@@ -21,17 +33,17 @@ using UnityEngine;
         }
 
         private void Start() {
-            SetGrid(PixelArtDrawingSystem.Instance.GetGrid());
+            SetGrid(drawPixels.GetGrid());
         }
 
-        public void SetGrid(Grid<PixelArtDrawingSystem.GridObject> grid) {
+        public void SetGrid(Grid<DrawPixels.PixelGridObject> grid) {
             this.grid = grid;
             UpdateVisual();
 
             grid.OnGridObjectChanged += Grid_OnGridValueChanged;
         }
 
-        private void Grid_OnGridValueChanged(object sender, Grid< PixelArtDrawingSystem.GridObject>.OnGridObjectChangedEventArgs e) {
+        private void Grid_OnGridValueChanged(object sender, Grid<DrawPixels.PixelGridObject>.OnGridObjectChangedEventArgs e) {
             updateMesh = true;
         }
 
@@ -49,7 +61,7 @@ using UnityEngine;
                 for (int y = 0; y < grid.GetHeight(); y++) {
                     int index = x * grid.GetHeight() + y;
 
-                     PixelArtDrawingSystem.GridObject gridObject = grid.GetGridObject(x, y);
+                    DrawPixels.PixelGridObject gridObject = grid.GetGridObject(x, y);
                     Vector3 quadSize = new Vector3(1, 1) * grid.GetCellSize();
                     Vector2 gridUV00, gridUV11;
                     gridUV00 = gridObject.GetColorUV();
@@ -65,3 +77,4 @@ using UnityEngine;
         }
 
     }
+

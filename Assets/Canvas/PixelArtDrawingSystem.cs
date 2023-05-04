@@ -12,7 +12,12 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     public static PixelArtDrawingSystem Instance { get; private set; }
 
     
-    
+    public enum CursorSize { //added
+            Small,
+            Medium,
+            Large
+        }
+    private CursorSize cursorSize;
 
     
     [SerializeField] private PixelArtDrawingSystemVisual pixelArtDrawingSystemVisual;
@@ -20,7 +25,7 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     private Grid<GridObject> grid;
     private Grid<GridObject> colorPicker;
     private int[] gridSize={100,100};
-    private float CellSize = .05f;//size of grid pixel
+    private float CellSize = 1f;//size of grid pixel
     private string PenType ="Circle";//Circle   Square
     private string ToolType="Pen";// Pen  Eraser  Bucket
     private Vector2 colorUV;//current pen color
@@ -36,7 +41,10 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     {
         Instance = this;
 
-        grid = new Grid<GridObject>(gridSize[0], gridSize[1], CellSize, Vector3.zero, (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
+        grid = new Grid<GridObject>(100, 100, CellSize, Vector3.zero, (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
+        
+        cursorSize = CursorSize.Small;
+        //grid = new Grid<GridObject>(gridSize[0], gridSize[1], CellSize, Vector3.zero, (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
         colorPicker = new Grid<GridObject>(255, 255, CellSize, new Vector3(-397, -256, 0), (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
 
         colorUV = new Vector2(0, 0);
@@ -46,51 +54,35 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     //added to clear grid
     public void clearGrid(){
         grid = new Grid<GridObject>(100, 100, CellSize, Vector3.zero, (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
+        
+        cursorSize = CursorSize.Small;
+
+        //grid = new Grid<GridObject>(100, 100, CellSize, Vector3.zero, (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
         colorUV = new Vector2(0, 0);
-        pixelArtDrawingSystemVisual.SetGrid(grid);
+        PixelArtDrawingSystemVisual.Instance.SetGrid(grid);
 
     }
 
-    private void Start() 
-    {
-        
-        pixelArtDrawingSystemVisual.SetGrid(grid);
-        
-        
-        
-        
-        
-    }
 
-
-    private void Update() 
-    {
-        if(PlayerList.Instance.getIsArtist()){ //only artist can draw
-            if (Input.GetKeyDown(KeyCode.B)) colorUV = new Vector2(.5f, 1);
-            if (Input.GetKeyDown(KeyCode.R)) colorUV = new Vector2(0, 1);
-            if (Input.GetKeyDown(KeyCode.G)) colorUV = new Vector2(.3f, 1f);
-            if (Input.GetKeyDown(KeyCode.W)) colorUV = new Vector2(0, 0);
-            
-
-
-            if (Input.GetMouseButtonDown(0)) 
-            {
-                Vector3 mousePosition = UtilsClass.GetMouseWorldPosition();
-
-
-                int penSize = GetPenSizeInt();
-                
+    private void Update() {
+            if (PlayerList.Instance.getIsArtist() && Input.GetMouseButton(0)) {
                 //added for multiplayer
-                UpdateDrawingServerRpc(mousePosition, penSize, colorUV, NetworkManager.Singleton.LocalClientId);
+                
+                // Paint on grid
+                Vector3 mouseWorldPosition = UtilsClass.GetMouseWorldPosition();
+               // int cursorSize = GetPixelSizeInt();
+                int cursorSize = GetCursorSizeInt();
+                UpdateDrawingServerRpc(mouseWorldPosition, cursorSize, colorUV, NetworkManager.Singleton.LocalClientId);
 
-
+                // Color picker
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f)) {
+                    colorUV = raycastHit.textureCoord;
+                    OnColorChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
-
-        }
-
-        // System.Threading.Thread.Sleep(1);
-        
     }
+
 
     public void pushHistory(){
         if(gridHistory==null){
@@ -265,6 +257,22 @@ public class PixelArtDrawingSystem : NetworkBehaviour
         ReceiveUpdateDrawingClientRpc(mousePosition, penSize, colorUV,  senderPlayerId);
     }
 
+
+    public void SetCursorSize(CursorSize cursorSize) {
+        this.cursorSize = cursorSize;
+        
+          
+        }
+
+        private int GetCursorSizeInt() {
+              switch (cursorSize) {
+                default:
+                case CursorSize.Small: return 1;
+                case CursorSize.Medium: return 3;
+                case CursorSize.Large: return 7;
+            }
+            
+        }
 
     public Vector2 GetColorUV() {
         return colorUV;
