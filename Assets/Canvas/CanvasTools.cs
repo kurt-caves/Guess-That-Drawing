@@ -26,9 +26,10 @@ public class CanvasTools : MonoBehaviour
     //[SerializeField] private Button undo;
     //[SerializeField] private Button redo;
     [SerializeField] private Button Picker;
+    
 
     [SerializeField] private Slider penBox;
-   
+   private String colorButton="SelectedColor";
 
     //[SerializeField] private Texture2D colorTexture2D;
     [SerializeField] private Vector2 colorUV;
@@ -56,7 +57,7 @@ public class CanvasTools : MonoBehaviour
            PixelArtDrawingSystem.Instance.SetCursorSize(PixelArtDrawingSystem.CursorSize.Large);
         });
         
-        selectedColorImage = transform.Find("SelectedColor").GetComponent<Image>();
+        selectedColorImage = transform.Find(colorButton).GetComponent<Image>();
 
 
      
@@ -72,6 +73,7 @@ public class CanvasTools : MonoBehaviour
         //     PixelArtDrawingSystem.Instance.pullHistory();
         // });
 
+        
         Picker.onClick.AddListener(() => {
             PixelArtDrawingSystem.Instance.SetToolType("Picker" );
             EnableButton("Bucket");

@@ -72,7 +72,7 @@ public class PixelArtDrawingSystem : NetworkBehaviour
                 Vector3 mouseWorldPosition = UtilsClass.GetMouseWorldPosition();
                // int cursorSize = GetPixelSizeInt();
                 int cursorSize = GetCursorSizeInt();
-                UpdateDrawingServerRpc(mouseWorldPosition, cursorSize, colorUV, NetworkManager.Singleton.LocalClientId);
+                UpdateDrawingServerRpc(mouseWorldPosition, PenSize, colorUV, NetworkManager.Singleton.LocalClientId);
 
                 // Color picker
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
