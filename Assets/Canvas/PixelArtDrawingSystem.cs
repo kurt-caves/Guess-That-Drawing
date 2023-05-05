@@ -29,10 +29,10 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     private string PenType ="Circle";//Circle   Square
     private string ToolType="Pen";// Pen  Eraser  Bucket
     private Vector2 colorUV;//current pen color
+    private Vector2[] ColorUVA= new Vector2[5];
     private int PenSize= 15;
-    private Texture2D[] gridHistory;
-    private int gridHistorySize=1;
-    private int gridHistoryCurrentPos=0;
+
+
 
     public event EventHandler OnColorChanged;
     
@@ -146,11 +146,7 @@ public class PixelArtDrawingSystem : NetworkBehaviour
         
         if (gridObjectA != null){
             
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f)) {
-                colorUV = raycastHit.textureCoord;
-                OnColorChanged?.Invoke(this, EventArgs.Empty);
-            }
+            
             
             
             if(ToolType == "Picker"){
@@ -277,6 +273,14 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     public Vector2 GetColorUV() {
         return colorUV;
     }
+    public void ChangeColorUV(int UVA) {
+        colorUV = ColorUVA[UVA];
+    }
+    /*public void ChangeColorUV(Vector2 UVA) {
+        ColorUVA[UVA] = colorUV;
+    }*/
+
+
     public Grid<GridObject> GetGrid() {
         return grid;
     }
@@ -304,17 +308,10 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     {
         ToolType=Type;
     }
-    public int getGridHistoryCurrentPos()
-    {
-        return gridHistoryCurrentPos;
-    }
-    public void setGridHistoryCurrentPos(int newCurrentPos)
-    {
-        gridHistoryCurrentPos = newCurrentPos;
-    }
-    public void changeColorUV(Vector2 pixelCoordinate){
-        colorUV = pixelCoordinate;
-    }
+    
+    // public void changeColorUV(Vector2 pixelCoordinate){
+    //     colorUV = pixelCoordinate;
+    // }
 
 
     public class GridObject // *********************************
