@@ -32,7 +32,7 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     private string ToolType="Pen";// Pen  Eraser  Bucket
     
     private Vector2 colorUV;//current pen color
-    private Vector2[] colorUVA= new Vector2[5];
+    private Vector2[] ColorUVA= new Vector2[5];
     private int PenSize= 15;
 
 
@@ -226,9 +226,9 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     public void ChangeColorUV(int UVA) {
         colorUV = ColorUVA[UVA];
     }
-    public void ChangeColorUV(Vector2 UVA) {
+    /*public void ChangeColorUV(Vector2 UVA) {
         ColorUVA[UVA] = colorUV;
-    }
+    }*/
 
 
     public Grid<GridObject> GetGrid() {
