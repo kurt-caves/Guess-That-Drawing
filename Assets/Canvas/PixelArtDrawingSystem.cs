@@ -26,13 +26,16 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     private Grid<GridObject> colorPicker;
     private int[] gridSize={100,100};
     private float CellSize = 1f;//size of grid pixel
+
+
     private string PenType ="Circle";//Circle   Square
     private string ToolType="Pen";// Pen  Eraser  Bucket
+    
     private Vector2 colorUV;//current pen color
+    private Vector2[] ColorUVA= new Vector2[5];
     private int PenSize= 15;
-    private Texture2D[] gridHistory;
-    private int gridHistorySize=1;
-    private int gridHistoryCurrentPos=0;
+
+
 
     public event EventHandler OnColorChanged;
     
@@ -72,7 +75,7 @@ public class PixelArtDrawingSystem : NetworkBehaviour
                 Vector3 mouseWorldPosition = UtilsClass.GetMouseWorldPosition();
                // int cursorSize = GetPixelSizeInt();
                 int cursorSize = GetCursorSizeInt();
-                UpdateDrawingServerRpc(mouseWorldPosition, cursorSize, colorUV, NetworkManager.Singleton.LocalClientId);
+                UpdateDrawingServerRpc(mouseWorldPosition, PenSize, ToolType, PenType, colorUV, NetworkManager.Singleton.LocalClientId);
 
                 // Color picker
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -84,60 +87,7 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     }
 
 
-    public void pushHistory(){
-        if(gridHistory==null){
-            gridHistory= new Texture2D[2]; 
-        }
-        if(gridHistorySize==gridHistory.Length){// change size of array
 
-            Texture2D[] newGridHistory = new Texture2D[(gridHistory.Length+1)*2];
-            
-
-            for(int i=0; i<gridHistoryCurrentPos; i++ ){
-                newGridHistory[i]=gridHistory[i];
-            }
-            
-            gridHistory = newGridHistory;
-
-            gridHistorySize=(gridHistory.Length+1)*2;
-        }
-        
-        Texture2D texture2D = new Texture2D(grid.GetWidth(), grid.GetHeight(), TextureFormat.ARGB32, false);
-            texture2D.filterMode = FilterMode.Point;
-
-            for (int x = 0; x < grid.GetWidth(); x++) {
-                for (int y = 0; y < grid.GetHeight(); y++) {
-                    GridObject gridObject = grid.GetGridObject(x, y);
-                    Vector2 pixelCoordinates = gridObject.GetColorUV();
-                    pixelCoordinates.x *= colorTexture2D.width;
-                    pixelCoordinates.y *= colorTexture2D.height;
-                    texture2D.SetPixel(x, y, colorTexture2D.GetPixel((int)pixelCoordinates.x, (int)pixelCoordinates.y));
-                }
-            }
-
-            texture2D.Apply();
-        CanvasTools.Instance.EnableButton("undo");
-        CanvasTools.Instance.DisableButton("redo");
-            
-    }
-
-    public void pullHistory()
-    {
-        if (Input.GetKeyDown(KeyCode.T)) {
-            Texture2D texture2D = new Texture2D(1, 1, TextureFormat.ARGB32, false);
-            texture2D.filterMode = FilterMode.Point;
-
-            byte[] byteArray = gridHistory[gridHistoryCurrentPos].GetRawTextureData();
-            gridHistoryCurrentPos-=1;
-            texture2D.LoadImage(byteArray);
-
-            
-        }
-        CanvasTools.Instance.EnableButton("redo");
-        if(gridHistoryCurrentPos<=0){
-            CanvasTools.Instance.DisableButton("undo"); 
-        }
-    }
 
 
     private void UpdateDrawing(Vector3 mousePosition, int penSize, Vector2 colorUV, ulong senderPlayerId) {
@@ -146,23 +96,19 @@ public class PixelArtDrawingSystem : NetworkBehaviour
         
         if (gridObjectA != null){
             
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f)) {
-                colorUV = raycastHit.textureCoord;
-                OnColorChanged?.Invoke(this, EventArgs.Empty);
-            }
+            
             
             
             if(ToolType == "Picker"){
                 pickerTool(mousePosition);
             }
             else {
-                pushHistory();
+                
                 if(ToolType == "Bucket"){
                     
                     Vector3 gridWorldPositionOrigin = mousePosition;
                     GridObject gridObjectOrigin = grid.GetGridObject(gridWorldPositionOrigin);
-                    edgeBucket(mousePosition, gridObjectOrigin.GetColorUV());
+                    edgeBucket(mousePosition, colorUV, gridObjectOrigin.GetColorUV());
                 }
                 else{
                     if(PenType == "Square"){
@@ -253,7 +199,7 @@ public class PixelArtDrawingSystem : NetworkBehaviour
 
     //added for multiplayer
     [ServerRpc(RequireOwnership = false)]
-    private void UpdateDrawingServerRpc(Vector3 mousePosition,  int penSize, Vector2 colorUV, ulong senderPlayerId) {
+    private void UpdateDrawingServerRpc(Vector3 mousePosition,  int penSize, String ToolType, String PenType, Vector2 colorUV, ulong senderPlayerId) {
         ReceiveUpdateDrawingClientRpc(mousePosition, penSize, colorUV,  senderPlayerId);
     }
 
@@ -277,6 +223,14 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     public Vector2 GetColorUV() {
         return colorUV;
     }
+    public void ChangeColorUV(int UVA) {
+        colorUV = ColorUVA[UVA];
+    }
+    /*public void ChangeColorUV(Vector2 UVA) {
+        ColorUVA[UVA] = colorUV;
+    }*/
+
+
     public Grid<GridObject> GetGrid() {
         return grid;
     }
@@ -304,17 +258,10 @@ public class PixelArtDrawingSystem : NetworkBehaviour
     {
         ToolType=Type;
     }
-    public int getGridHistoryCurrentPos()
-    {
-        return gridHistoryCurrentPos;
-    }
-    public void setGridHistoryCurrentPos(int newCurrentPos)
-    {
-        gridHistoryCurrentPos = newCurrentPos;
-    }
-    public void changeColorUV(Vector2 pixelCoordinate){
-        colorUV = pixelCoordinate;
-    }
+    
+    // public void changeColorUV(Vector2 pixelCoordinate){
+    //     colorUV = pixelCoordinate;
+    // }
 
 
     public class GridObject // *********************************
@@ -353,7 +300,7 @@ public class PixelArtDrawingSystem : NetworkBehaviour
 
 
     
-    private void edgeBucket(Vector3 mousePosition, Vector2 colorOrigin){//*********************************************** Fill Bucket
+    private void edgeBucket(Vector3 mousePosition, Vector2 colorUV , Vector2 colorOrigin){//*********************************************** Fill Bucket
         if(colorOrigin!=colorUV){
             Vector3 gridWorldPositionRight = mousePosition;
             GridObject gridObjectRight = grid.GetGridObject(gridWorldPositionRight);// defines origin
@@ -432,16 +379,16 @@ public class PixelArtDrawingSystem : NetworkBehaviour
         edgeBucketWrapRight( gridWorldPositionDown + new Vector3(0, 0) * CellSize,  colorOrigin, gridWorldPositionRight + new Vector3(-1, -1) * CellSize);// wrap around bottom right edge 
         
         if(gridWorldPositionRight != null && gridObjectRight.GetColorUV() == colorOrigin){// checks for failure
-        edgeBucket(gridWorldPositionRight + new Vector3(0, 0) * CellSize, colorOrigin);
+        edgeBucket(gridWorldPositionRight + new Vector3(0, 0) * CellSize, colorUV, colorOrigin);
         }
         if(gridWorldPositionLeft != null && gridObjectLeft.GetColorUV() == colorOrigin){// checks for failure
-        edgeBucket(gridWorldPositionLeft + new Vector3(0, 0) * CellSize, colorOrigin);
+        edgeBucket(gridWorldPositionLeft + new Vector3(0, 0) * CellSize, colorUV, colorOrigin);
         }
         if(gridWorldPositionUp != null && gridObjectUp.GetColorUV() == colorOrigin){// checks for failure
-        edgeBucket(gridWorldPositionUp + new Vector3(0, 0) * CellSize, colorOrigin);
+        edgeBucket(gridWorldPositionUp + new Vector3(0, 0) * CellSize, colorUV, colorOrigin);
         }
         if(gridWorldPositionDown != null && gridObjectDown.GetColorUV() == colorOrigin){// checks for failure
-        edgeBucket(gridWorldPositionDown + new Vector3(0, 0) * CellSize, colorOrigin);
+        edgeBucket(gridWorldPositionDown + new Vector3(0, 0) * CellSize, colorUV, colorOrigin);
         }
         }
 
