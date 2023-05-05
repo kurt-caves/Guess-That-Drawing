@@ -42,24 +42,24 @@ public class CanvasTools : MonoBehaviour
         
         Instance = this;
 
-        SelectedColor.onClick.AddListener(() => {
-            colorButton="SelectedColor";
-            PixelArtDrawingSystem.Instance.ChangeColorUV(0);
+        // SelectedColor.onClick.AddListener(() => {
+        //     colorButton="SelectedColor";
+        //     PixelArtDrawingSystem.Instance.ChangeColorUV(0);
 
-        });
-        SelectedColor1.onClick.AddListener(() => {
-            colorButton="SelectedColor1";
-            PixelArtDrawingSystem.Instance.ChangeColorUV(1);
-        });
+        // });
+        // SelectedColor1.onClick.AddListener(() => {
+        //     colorButton="SelectedColor1";
+        //     PixelArtDrawingSystem.Instance.ChangeColorUV(1);
+        // });
 
-        if(colorButton=="SelectedColor"){
-            if(transform.Find(colorButton).GetComponent<Image>()!=null)
-             selectedColorImage = transform.Find(colorButton).GetComponent<Image>();
-        }
-        else if(colorButton=="SelectedColor1"){
-            if(transform.Find(colorButton).GetComponent<Image>()!=null)
-             selectedColor1Image = transform.Find(colorButton).GetComponent<Image>();
-        }
+        // if(colorButton=="SelectedColor"){
+        //     if(transform.Find(colorButton).GetComponent<Image>()!=null)
+        //      selectedColorImage = transform.Find(colorButton).GetComponent<Image>();
+        // }
+        // else if(colorButton=="SelectedColor1"){
+        //     if(transform.Find(colorButton).GetComponent<Image>()!=null)
+        //      selectedColor1Image = transform.Find(colorButton).GetComponent<Image>();
+        // }
 
      
         CanvasTools.Instance.DisableButton("Pen");
