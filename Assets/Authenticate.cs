@@ -83,6 +83,8 @@ public class Authenticate : MonoBehaviour {
         playerName = nameBox.text;
         OnNameChanged?.Invoke(this, EventArgs.Empty);
     }
-    
+     public void Show() {
+        gameObject.SetActive(true);
+    }
 }
 

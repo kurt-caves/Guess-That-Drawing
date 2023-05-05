@@ -22,11 +22,13 @@ public class FrontPage : MonoBehaviour
         // grab the root of the UI
         VisualElement root = UIDoc.rootVisualElement;
         // grab the button
-        fpButton = root.Q<Button>("front-page-button");
+        fpButton = root.Q<Button>("fpButton");
 
         fpButton.clicked += () => {
+            gameObject.SetActive(false);
+            Authenticate.Instance.Show();
             Debug.Log("FrontPage Button Clicked");
-            SceneManager.LoadScene("Game");
+           
         };
 
         Debug.Log("FrontPage Enabled");
