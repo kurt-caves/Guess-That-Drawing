@@ -23,12 +23,15 @@ public class CanvasTools : MonoBehaviour
     [SerializeField] private Button Eraser;
     [SerializeField] private Button PenSquare;
     [SerializeField] private Button PenCircle;
+    //[SerializeField] private Button undo;
+    //[SerializeField] private Button redo;
     [SerializeField] private Button Picker;
     
 
     [SerializeField] private Slider penBox;
    private String colorButton="SelectedColor";
 
+    //[SerializeField] private Texture2D colorTexture2D;
     [SerializeField] private Vector2 colorUV;
     
     private void Start() {
@@ -58,10 +61,17 @@ public class CanvasTools : MonoBehaviour
 
 
      
+       // CanvasTools.Instance.DisableButton("undo");
         CanvasTools.Instance.DisableButton("Pen");
         CanvasTools.Instance.DisableButton("Circle");
 
         
+        // redo.onClick.AddListener(() => {
+        //     PixelArtDrawingSystem.Instance.pushHistory();
+        // });
+        // undo.onClick.AddListener(() => {
+        //     PixelArtDrawingSystem.Instance.pullHistory();
+        // });
 
         
         Picker.onClick.AddListener(() => {
@@ -120,6 +130,12 @@ public class CanvasTools : MonoBehaviour
     }
 
     public void DisableButton (string button) {
+        // if(button == "undo"){
+        //     undo.interactable = false;
+        // }
+        // if(button == "redo"){
+        //     redo.interactable = false;
+        // }
         if(button == "Square"){
             PenSquare.interactable = false;
         }
@@ -143,6 +159,12 @@ public class CanvasTools : MonoBehaviour
        
     }
     public void EnableButton (string button) {
+        // if(button == "undo"){
+        //     undo.interactable = true;
+        // } 
+        // if(button == "redo"){
+        //     redo.interactable = true;
+        // }
         if(button == "Square"){
             PenSquare.interactable = true;
         }
