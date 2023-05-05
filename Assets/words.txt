@@ -47,7 +47,6 @@ Dolphin
 Turtle
 Frog
 Snail
-[medium]
 Ant
 Bee
 Ladybug
@@ -95,7 +94,6 @@ Skateboard
 Roller skates
 Balloon
 Kite
-[hard]
 Teddy bear
 Doll
 Lego
