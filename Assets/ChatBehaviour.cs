@@ -5,30 +5,37 @@ using UnityEngine.UI;
 using Unity.Netcode;
 using System;
 
+/*
+ 
+    ChatBehaviour
+
+    Controls the behaviour of the real-time chatbox
+
+*/
 public class ChatBehaviour : NetworkBehaviour
 {
 
     public string username;
-
     public int maxMessages = 25;
+     public Color playerMessage, info;
     
     [SerializeField] private GameObject chatPanel, textObject;
     [SerializeField] private TMPro.TMP_InputField chatBox;
-
-
-    public Color playerMessage, info;
-
     [SerializeField] List<Message> messageList = new List<Message>();
  
+
+    
     private void Start() {
-        GameBehavior.Instance.OnTookTurn += UpdateTurn_Event;
-        
+        GameBehavior.Instance.OnTookTurn += UpdateTurn_Event; // 
     }
 
     private void UpdateTurn_Event(object sender, EventArgs e) {
         UpdateTurn();
     }
 
+    /*
+        Only the guessers can type into the chat box
+    */
     private void UpdateTurn() {
         if(PlayerList.Instance.getIsArtist()){
             chatBox.interactable = false;
@@ -37,9 +44,11 @@ public class ChatBehaviour : NetworkBehaviour
         }
     }
 
+
     private void Awake(){
         username = Authenticate.Instance.GetPlayerName();
     }
+
 
     private void Update()
     {
@@ -47,6 +56,10 @@ public class ChatBehaviour : NetworkBehaviour
   
     }
 
+    /*
+        Checks whether the user entered the secret word. If they guessed correctly, award points. Otherwise, send 
+        their message to the other players
+    */
     private void HandleChat(){
 
         if(chatBox.text != "")
@@ -54,6 +67,7 @@ public class ChatBehaviour : NetworkBehaviour
             if(Input.GetKeyDown(KeyCode.Return))
             {
             
+                // User guessed the secret word. Award points to the guesser
                 if(chatBox.text.Equals(GameBehavior.Instance.getSecretWord(),StringComparison.OrdinalIgnoreCase)){
                     if(PlayerList.Instance.getGuessedCorrect() == false){
                         PlayerList.Instance.addPoints(2);
@@ -62,6 +76,7 @@ public class ChatBehaviour : NetworkBehaviour
                         SendChatMessageServerRpc(username + " guessed the word!", Message.MessageType.info, NetworkManager.Singleton.LocalClientId);
                         chatBox.text = "";
                     }
+                    // User already guessed the secret word. Don't award points
                     else{
                         Message newMessage = new Message();
 
@@ -73,9 +88,9 @@ public class ChatBehaviour : NetworkBehaviour
                         newMessage.textObject.color = MessageTypeColor(Message.MessageType.info);
 
                         messageList.Add(newMessage);
-                    
-                    
                     }
+
+                // User did not enter in the secret word. Send their message to the other players
                 }else{
                     SendChatMessageServerRpc(username + ": "+chatBox.text, Message.MessageType.playerMessage, NetworkManager.Singleton.LocalClientId);
                     chatBox.text = "";
@@ -100,6 +115,19 @@ public class ChatBehaviour : NetworkBehaviour
 
     }
 
+    /*
+        Sets the color of the chat message based on the messageType.
+        Messages announcing a player guessed correctly are in green, 
+        and all other chat messages are black.
+
+        Parameters:
+            messageType - the type of message being sent
+
+        Precondition:
+            messageType is either info (for announcing a player guessed correctly) 
+            or playerMessage (for any other chat message)
+
+    */
     Color MessageTypeColor(Message.MessageType messageType)
     {
         Color color = info;
@@ -114,8 +142,13 @@ public class ChatBehaviour : NetworkBehaviour
         return color;
     }
 
+     /*
+        Adds the user's message to the chatbox for all players to see
+
+    */
     private void AddMessage(string text,  Message.MessageType messageType, ulong senderPlayerId) {
         
+        // Too many messages. Remove the oldest one.
         if(messageList.Count >= maxMessages){
             Destroy(messageList[0].textObject.gameObject);
             messageList.Remove(messageList[0]);
@@ -134,12 +167,9 @@ public class ChatBehaviour : NetworkBehaviour
 
         messageList.Add(newMessage);
         
-        
-       
-     
-            
-        
+
     }
+
 
     [ClientRpc]
     private void ReceiveChatMessageClientRpc(string message,  Message.MessageType messageType, ulong senderPlayerId) {
@@ -152,16 +182,9 @@ public class ChatBehaviour : NetworkBehaviour
         ReceiveChatMessageClientRpc(message, messageType,  senderPlayerId);
     }
 
-
-
-
-
-
 }
 
 
-
-//[System.Serializable]
 public class Message
 {
     public string text;

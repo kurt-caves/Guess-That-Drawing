@@ -12,7 +12,12 @@ using System.Threading.Tasks;
 using System;
 using UnityEngine.Networking;
 
+/*
+    RelayManager
 
+    Handles the real-time connection between players.
+
+*/
 public class RelayManager : MonoBehaviour
 {
    
@@ -26,9 +31,7 @@ public class RelayManager : MonoBehaviour
     private int arrLength = 0;
     private ulong[] pArray;
     
-    
-
-     public enum ConnectionStatus
+    public enum ConnectionStatus
     {
         Connected,
         Disconnected
@@ -37,18 +40,19 @@ public class RelayManager : MonoBehaviour
     
     public event Action<ulong, ConnectionStatus> OnClientConnectionNotification;
 
-
+    // someone joined the game
     private void OnClientConnectedCallback(ulong clientId)
     {
         OnClientConnectionNotification?.Invoke(clientId, ConnectionStatus.Connected);
     }
 
+    // someone left the game
     private void OnClientDisconnectCallback(ulong clientId)
     {
         OnClientConnectionNotification?.Invoke(clientId, ConnectionStatus.Disconnected);
     }
 
-
+    
     private void Awake() {
         Instance = this;
         pArray = new ulong[TestLobby.Instance.GetMaxPlayers()];
@@ -76,7 +80,9 @@ public class RelayManager : MonoBehaviour
         }
     }
     
-
+    /*
+        Creates a server that other users can join using a joinCode
+    */
     public async Task<string> CreateRelay() {
 
         try{
@@ -103,6 +109,9 @@ public class RelayManager : MonoBehaviour
        
     }
 
+    /*
+        Allows clients to join a server using a joinCode
+    */
     public async void JoinRelay(string joinCode) {
         try{
 
@@ -136,36 +145,13 @@ public class RelayManager : MonoBehaviour
         NetworkManager.Singleton.Shutdown();
         _inGame = false;
         OnLeftGame?.Invoke(this, EventArgs.Empty);
-        /*
-        if((NetworkManager.Singleton.LocalClientId == clientId)){
-            TestLobby.Instance.LeaveLobby();
-            NetworkManager.Singleton.Shutdown();
-           
-        }
-        
-        if(GameBehavior.Instance.getNumPlayers() < TestLobby.Instance.GetMinPlayers()){
-            TestLobby.Instance.LeaveLobby();
-            NetworkManager.Singleton.Shutdown();
-            _inGame = false;
-            OnLeftGame?.Invoke(this, EventArgs.Empty);
-        }
-        else{
-            
-            if(TestLobby.Instance.IsLobbyHost()){
-                arrLength --;
-                GameBehavior.Instance.UpdateList(pArray, arrLength);
-            }
-            
-        }
-        */
-        
-
-        
-
-
+    
+ 
     }
     
-    
+    /*
+        Adds a new player to pArray whenever someone new joins the game
+    */
     private void OnClientConnected(ulong clientId){
         Debug.Log("Player connected with client ID {"+clientId+"}");
         
@@ -188,43 +174,7 @@ public class RelayManager : MonoBehaviour
     public ulong getClientId(){
         return NetworkManager.Singleton.LocalClientId;
     }
-    
-
-    
- /*
-    public static void RegisterPlayer(ulong clientId)
-    {
-        m_Players.Add(clientId);
-
-    }
-*/
-/*
-    public List<ulong> GetPlayerList(){
-        return m_Players;
-    }
-    */
-    //added
-    /*
-    public void Disconnect()
-    {
-        NetworkManager.Singleton.Shutdown();
-    }
-
-    *   /
-
-
-    //added
-    /*
-    public void Cleanup()
-    {
-        if (NetworkManager.Singleton != null)
-        {   
-            Destroy(NetworkManager.Singleton.gameObject);
-        }
-    }
-*/
-
-    
+     
 
    
 }

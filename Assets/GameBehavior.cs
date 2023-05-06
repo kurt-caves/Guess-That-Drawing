@@ -6,13 +6,20 @@ using Unity.Netcode;
 using UnityEngine.UI;
 using TMPro;
 
+/*
+   
+    GameBehaviour
+
+    Controls the mechanics of the game
+  
+*/
 public class GameBehavior : NetworkBehaviour
 {
     public event EventHandler OnTookTurn;
     [SerializeField] private TextMeshProUGUI WordToDrawText;
     bool startedGame = false;
-    ulong[] m_Players;
-    int numPlayers;
+    ulong[] m_Players; 
+    int numPlayers; 
     string secretWord;
     int numGuessed;
 
@@ -20,25 +27,29 @@ public class GameBehavior : NetworkBehaviour
     
     public static GameBehavior Instance { get; private set; }
 
+    // returns the number of players who guessed correctly
     public int getNumGuessed(){
         return numGuessed;
     }
 
+    // returns the total number of players in the lobby
     public int getNumPlayers(){
         return numPlayers;
     }
 
+    // returns the secret word
     public string getSecretWord(){
         return secretWord;
     }
     
+
     private void Awake()
     {
         Instance = this;
-        artistIndex = 0;
-        
+        artistIndex = 0; 
     }
 
+    // Increments NumGuessed when another player guesses correctly
     public void incNumGuessed(){
         UpdateNumGuessedServerRpc(numGuessed + 1, NetworkManager.Singleton.LocalClientId);
     }
@@ -56,12 +67,18 @@ public class GameBehavior : NetworkBehaviour
         
     }
    
+   /*
+        Share the new value for numGuessed with all other players.
+        Give one point to the artist.
+        If everyone guessed correctly, make someone else the artist.
+
+   */
     private void UpdateNumGuessed(int numGuessed, ulong senderPlayerId) {
         this.numGuessed = numGuessed;
         if(RelayManager.Instance.getClientId() == m_Players[artistIndex]){
             PlayerList.Instance.addPoints(1);
 
-
+            // Everyone guessed correctly. Take turn
             if (numGuessed >= numPlayers-1){
                 TakeTurn();
             }
@@ -70,7 +87,9 @@ public class GameBehavior : NetworkBehaviour
     }
 
 
-
+    /*
+        Handles transfering who the artist is
+    */
     public void TakeTurn()
     {
         if (numPlayers >= 1){
@@ -82,12 +101,8 @@ public class GameBehavior : NetworkBehaviour
             }
             string newWord = WordBank.Instance.GetRandomWord("easy");
             UpdateTurnServerRpc(newIndex, newWord, NetworkManager.Singleton.LocalClientId);
-           
-
         }
-        
-     
-       
+         
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -102,6 +117,15 @@ public class GameBehavior : NetworkBehaviour
         
     }
    
+
+    /*
+        Handles switching turns
+
+        Parameters:
+            newIndex - index of the new artist in m_Players
+            newWord - the new word to draw
+            senderPlayerId - Id of the player who called this method
+    */
     private void UpdateTurn(int newIndex, string newWord, ulong senderPlayerId) {
         
         //pick a new secret word
@@ -131,8 +155,6 @@ public class GameBehavior : NetworkBehaviour
         //reset the timer
         Timer.Instance.StartTimer();
 
-        
-
         OnTookTurn?.Invoke(this, EventArgs.Empty);
     }
    
@@ -142,7 +164,6 @@ public class GameBehavior : NetworkBehaviour
         
     }
     
-
     [ServerRpc(RequireOwnership = false)]
     private void  UpdateListServerRpc( ulong[] pArray, int arrLength, ulong senderPlayerId) {
         ReceiveListUpdateClientRpc(pArray, arrLength, senderPlayerId);
@@ -155,6 +176,9 @@ public class GameBehavior : NetworkBehaviour
         
     }
    
+    /*
+        Updates the list of player client Id's whenever a someone new joins the game
+    */
     private void UpdateList(ulong[] pArray, int arrLength, ulong senderPlayerId) {
         m_Players = pArray;
         numPlayers = arrLength;

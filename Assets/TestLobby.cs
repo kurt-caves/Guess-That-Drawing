@@ -8,6 +8,9 @@ using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
+/*
+    Controls the behavior of the lobby
+*/
 public class TestLobby : MonoBehaviour {
 
 
@@ -22,17 +25,13 @@ public class TestLobby : MonoBehaviour {
     private int minPlayers =  1;
     private int maxPlayers = 6;
     
-    //private bool _wasDisconnected = false;
-    //private string _previousRelayCode;
-   // public const string KEY_GAME_MODE = "GameMode";
-    
     public event EventHandler OnLeftLobby;
 
     public event EventHandler<LobbyEventArgs> OnJoinedLobby;
     public event EventHandler<LobbyEventArgs> OnJoinedLobbyUpdate;
     public event EventHandler<LobbyEventArgs> OnKickedFromLobby;
-    //public event EventHandler<LobbyEventArgs> OnLobbyGameModeChanged;
-    public event EventHandler<System.EventArgs> OnGameStarted; //?
+   
+    public event EventHandler<System.EventArgs> OnGameStarted; 
 
     public class LobbyEventArgs : EventArgs {
         public Lobby lobby;
@@ -43,11 +42,7 @@ public class TestLobby : MonoBehaviour {
         public List<Lobby> lobbyList;
     }
 
-/*
-    public enum GameMode {
-        Classic
-    }
-*/
+
     private float heartbeatTimer;
     private float lobbyPollTimer;
     private float refreshLobbyListTimer = 5f;
