@@ -189,7 +189,7 @@ public class GameBehavior : NetworkBehaviour
             Debug.Log(m_Players[i]);
         }
 
-        if(numPlayers >=  TestLobby.Instance.GetJoinedLobby().Players.Count&& TestLobby.Instance.IsLobbyHost() && startedGame == false){
+        if(numPlayers >=  LobbyManager.Instance.GetJoinedLobby().Players.Count&& LobbyManager.Instance.IsLobbyHost() && startedGame == false){
             startedGame = true;
             TakeTurn();
             

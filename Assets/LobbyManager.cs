@@ -11,10 +11,10 @@ using UnityEngine;
 /*
     Controls the behavior of the lobby
 */
-public class TestLobby : MonoBehaviour {
+public class LobbyManager : MonoBehaviour {
 
 
-    public static TestLobby Instance { get; private set; }
+    public static LobbyManager Instance { get; private set; }
 
 
     public const string KEY_PLAYER_NAME = "PlayerName";
@@ -22,7 +22,7 @@ public class TestLobby : MonoBehaviour {
    
     
     private int lobbyCount = 0;
-    private int minPlayers =  1;
+    private int minPlayers =  3;
     private int maxPlayers = 6;
     
     public event EventHandler OnLeftLobby;

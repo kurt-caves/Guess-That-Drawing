@@ -55,7 +55,7 @@ public class RelayManager : MonoBehaviour
     
     private void Awake() {
         Instance = this;
-        pArray = new ulong[TestLobby.Instance.GetMaxPlayers()];
+        pArray = new ulong[LobbyManager.Instance.GetMaxPlayers()];
         for (int i = 0; i < pArray.Length; i++ ) {
             pArray[i] = 1000000;
          }
@@ -86,7 +86,7 @@ public class RelayManager : MonoBehaviour
     public async Task<string> CreateRelay() {
 
         try{
-            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(TestLobby.Instance.GetMaxPlayers()); //Create allocation. host + 3 players 
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(LobbyManager.Instance.GetMaxPlayers()); //Create allocation. host + 3 players 
 
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId); //Get join code
 
@@ -141,7 +141,7 @@ public class RelayManager : MonoBehaviour
     public void OnClientDisconnected(ulong clientId){
         
        // m_Players.Remove(clientId);
-       TestLobby.Instance.LeaveLobby();
+        LobbyManager.Instance.LeaveLobby();
         NetworkManager.Singleton.Shutdown();
         _inGame = false;
         OnLeftGame?.Invoke(this, EventArgs.Empty);
@@ -156,7 +156,7 @@ public class RelayManager : MonoBehaviour
         Debug.Log("Player connected with client ID {"+clientId+"}");
         
         
-        if(TestLobby.Instance.IsLobbyHost()){
+        if(LobbyManager.Instance.IsLobbyHost()){
             pArray[arrLength] = clientId;
             arrLength ++;
             GameBehavior.Instance.UpdateList(pArray, arrLength);

@@ -28,17 +28,17 @@ public class LobbyUI : MonoBehaviour {
       //  playerSingleTemplate.gameObject.SetActive(false);
 
         leaveButton.onClick.AddListener(() => {
-            TestLobby.Instance.LeaveLobby();
+            LobbyManager.Instance.LeaveLobby();
         });
 
         StartButton.onClick.AddListener(() => {
-            TestLobby.Instance.StartGame();
+            LobbyManager.Instance.StartGame();
         });
     }
 
     private void Start() {
-        TestLobby.Instance.OnJoinedLobby += UpdateLobby_Event;
-        TestLobby.Instance.OnJoinedLobbyUpdate += UpdateLobby_Event;
+        LobbyManager.Instance.OnJoinedLobby += UpdateLobby_Event;
+        LobbyManager.Instance.OnJoinedLobbyUpdate += UpdateLobby_Event;
         //TestLobby.Instance.OnLeftLobby += TestLobby_OnLeftLobby;
       //  TestLobby.Instance.OnKickedFromLobby += TestLobby_OnLeftLobby;
 
@@ -50,12 +50,12 @@ public class LobbyUI : MonoBehaviour {
         Hide();
     }
 
-    private void UpdateLobby_Event(object sender, TestLobby.LobbyEventArgs e) {
+    private void UpdateLobby_Event(object sender, LobbyManager.LobbyEventArgs e) {
         UpdateLobby();
     }
 
     private void UpdateLobby() {
-        UpdateLobby(TestLobby.Instance.GetJoinedLobby());
+        UpdateLobby(LobbyManager.Instance.GetJoinedLobby());
     }
 
     private void UpdateLobby(Lobby lobby) {

@@ -24,7 +24,7 @@ public class LobbySetup : MonoBehaviour {
 
         createPublicButton.onClick.AddListener(() => {
 
-            TestLobby.Instance.CreateLobby(
+            LobbyManager.Instance.CreateLobby(
                 lobbyName,
                // maxPlayers,
                 isPrivate
@@ -37,7 +37,7 @@ public class LobbySetup : MonoBehaviour {
 
 
 	    QuickJoinButton.onClick.AddListener(() => {
-            TestLobby.Instance.QuickJoinLobby();
+            LobbyManager.Instance.QuickJoinLobby();
             Hide();
             LobbyWaitingRoom.Instance.Show();
 
@@ -49,7 +49,7 @@ public class LobbySetup : MonoBehaviour {
     }
 
     private void Start() {
-        TestLobby.Instance.OnLobbyListChanged += UpdateLobbyCount_Event;
+        LobbyManager.Instance.OnLobbyListChanged += UpdateLobbyCount_Event;
         
         
        
@@ -57,13 +57,13 @@ public class LobbySetup : MonoBehaviour {
         Hide();
     }
     
-    private void UpdateLobbyCount_Event(object sender, TestLobby.OnLobbyListChangedEventArgs e) {
+    private void UpdateLobbyCount_Event(object sender, LobbyManager.OnLobbyListChangedEventArgs e) {
         UpdateLobbyCount();
     }
 
     private void UpdateLobbyCount() {
         
-        if(TestLobby.Instance.GetLobbyCount() < 1){
+        if(LobbyManager.Instance.GetLobbyCount() < 1){
             DisableButton();
         }
         else{
@@ -78,7 +78,7 @@ public class LobbySetup : MonoBehaviour {
     public void Show() {
         gameObject.SetActive(true);
         
-        lobbyName = "MyLobby"+ TestLobby.Instance.GetLobbyCount();
+        lobbyName = "MyLobby"+ LobbyManager.Instance.GetLobbyCount();
         isPrivate = false;
         //maxPlayers = 6;
        // gameMode = LobbyManager.GameMode.CaptureTheFlag;

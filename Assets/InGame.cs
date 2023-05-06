@@ -18,8 +18,8 @@ public class InGame : MonoBehaviour
    
     
     private void Start() {
-        TestLobby.Instance.OnJoinedLobby += UpdateLobby_Event;
-        TestLobby.Instance.OnJoinedLobbyUpdate += UpdateLobby_Event;
+        LobbyManager.Instance.OnJoinedLobby += UpdateLobby_Event;
+        LobbyManager.Instance.OnJoinedLobbyUpdate += UpdateLobby_Event;
         RelayManager.Instance.OnLeftGame += LeaveGame_Event;
        // RelayManager.Instance.OnAddPlayerList +=  AddPlayerList_Event;
         
@@ -62,12 +62,12 @@ public class InGame : MonoBehaviour
 
 
 
-     private void UpdateLobby_Event(object sender, TestLobby.LobbyEventArgs e) {
+     private void UpdateLobby_Event(object sender, LobbyManager.LobbyEventArgs e) {
         UpdateLobby();
     }
 
     private void UpdateLobby() {
-        UpdateLobby(TestLobby.Instance.GetJoinedLobby());
+        UpdateLobby(LobbyManager.Instance.GetJoinedLobby());
     }
 
     private void UpdateLobby(Lobby lobby) {

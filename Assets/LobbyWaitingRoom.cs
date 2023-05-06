@@ -29,21 +29,21 @@ public class LobbyWaitingRoom : MonoBehaviour {
       //  playerSingleTemplate.gameObject.SetActive(false);
 
         leaveButton.onClick.AddListener(() => {
-            TestLobby.Instance.LeaveLobby();
+            LobbyManager.Instance.LeaveLobby();
             Hide();
             LobbySetup.Instance.Show();
 
         });
 
         StartButton.onClick.AddListener(() => {
-            TestLobby.Instance.StartGame();
+            LobbyManager.Instance.StartGame();
             Hide();
         });
     }
 
     private void Start() {
-        TestLobby.Instance.OnJoinedLobby += UpdateLobby_Event;
-        TestLobby.Instance.OnJoinedLobbyUpdate += UpdateLobby_Event;
+        LobbyManager.Instance.OnJoinedLobby += UpdateLobby_Event;
+        LobbyManager.Instance.OnJoinedLobbyUpdate += UpdateLobby_Event;
        
         
 
@@ -51,12 +51,12 @@ public class LobbyWaitingRoom : MonoBehaviour {
     }
 
 
-    private void UpdateLobby_Event(object sender, TestLobby.LobbyEventArgs e) {
+    private void UpdateLobby_Event(object sender, LobbyManager.LobbyEventArgs e) {
         UpdateLobby();
     }
 
     private void UpdateLobby() {
-        UpdateLobby(TestLobby.Instance.GetJoinedLobby());
+        UpdateLobby(LobbyManager.Instance.GetJoinedLobby());
     }
 
     private void UpdateLobby(Lobby lobby) {
@@ -67,7 +67,7 @@ public class LobbyWaitingRoom : MonoBehaviour {
         
         if(lobby != null){
 
-            if(lobby.Players.Count < TestLobby.Instance.GetMinPlayers()){
+            if(lobby.Players.Count < LobbyManager.Instance.GetMinPlayers()){
                 DisableButton();
             }else{
                 EnableButton();
@@ -80,7 +80,7 @@ public class LobbyWaitingRoom : MonoBehaviour {
             }
 
             lobbyNameText.text = "Lobby Name: " + lobby.Name;
-            playerCountText.text = lobby.Players.Count + "/"+ + TestLobby.Instance.GetMinPlayers() + " players needed";
+            playerCountText.text = lobby.Players.Count + "/"+ + LobbyManager.Instance.GetMinPlayers() + " players needed";
 
         }
         

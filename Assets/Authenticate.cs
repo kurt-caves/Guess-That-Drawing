@@ -43,7 +43,7 @@ public class Authenticate : MonoBehaviour {
        
         AuthenticateButton.onClick.AddListener(() => {
             setUserName();
-            TestLobby.Instance.Authenticate(GetPlayerName());
+            LobbyManager.Instance.Authenticate(GetPlayerName());
             Hide();
             LobbySetup.Instance.Show();
         });
@@ -57,7 +57,7 @@ public class Authenticate : MonoBehaviour {
     }
     
     private void EditPlayerName_OnNameChanged(object sender, EventArgs e) {
-        TestLobby.Instance.UpdatePlayerName(GetPlayerName());
+        LobbyManager.Instance.UpdatePlayerName(GetPlayerName());
         EnableButton();
 
     }
