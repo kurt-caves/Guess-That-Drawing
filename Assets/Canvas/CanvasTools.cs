@@ -14,8 +14,8 @@ public class CanvasTools : MonoBehaviour
 
 
     [SerializeField] private Image selectedColorImage;
-    [SerializeField] private Image selectedColor1Image;
-    private String colorButton="SelectedColor";
+   // [SerializeField] private Image selectedColor1Image;
+   // private String colorButton="SelectedColor";
  
     [SerializeField] private Button BucketFill;
     [SerializeField] private Button Pen;
@@ -24,9 +24,9 @@ public class CanvasTools : MonoBehaviour
     [SerializeField] private Button PenCircle;
     //[SerializeField] private Button undo;
     //[SerializeField] private Button redo;
-    [SerializeField] private Button Picker;
-    [SerializeField] private Button SelectedColor;
-    [SerializeField] private Button SelectedColor1;
+   // [SerializeField] private Button Picker;
+   // [SerializeField] private Button SelectedColor;
+    //[SerializeField] private Button SelectedColor1;
 
     [SerializeField] private Slider penBox;
 
@@ -42,6 +42,9 @@ public class CanvasTools : MonoBehaviour
     private void Awake() {
         
         Instance = this;
+
+        penBox.maxValue = 9;
+
 
         // SelectedColor.onClick.AddListener(() => {
         //     colorButton="SelectedColor";
@@ -64,8 +67,8 @@ public class CanvasTools : MonoBehaviour
 
      
        // CanvasTools.Instance.DisableButton("undo");
-        CanvasTools.Instance.DisableButton("Pen");
-        CanvasTools.Instance.DisableButton("Circle");
+        //CanvasTools.Instance.DisableButton("Pen");
+        //CanvasTools.Instance.DisableButton("Circle");
 
         
         // redo.onClick.AddListener(() => {
@@ -77,20 +80,14 @@ public class CanvasTools : MonoBehaviour
 
         
 
-        Picker.onClick.AddListener(() => {
-            PixelArtDrawingSystem.Instance.SetToolType("Picker" );
-            EnableButton("Bucket");
-            EnableButton("Pen");
-            EnableButton("Eraser");
-            DisableButton("Picker");
-        });
+      
 
         BucketFill.onClick.AddListener(() => {
             PixelArtDrawingSystem.Instance.SetToolType("Bucket" );
             DisableButton("Bucket");
             EnableButton("Pen");
             EnableButton("Eraser");
-            EnableButton("Picker");
+           
         });
 
         Pen.onClick.AddListener(() => {
@@ -98,7 +95,7 @@ public class CanvasTools : MonoBehaviour
             DisableButton("Pen");
             EnableButton("Bucket");
             EnableButton("Eraser");
-            EnableButton("Picker");
+         
         });
 
         Eraser.onClick.AddListener(() => {
@@ -106,7 +103,7 @@ public class CanvasTools : MonoBehaviour
             DisableButton("Eraser");
             EnableButton("Bucket");
             EnableButton("Pen");
-            EnableButton("Picker");
+            
         });
 
         PenSquare.onClick.AddListener(() => {
@@ -121,6 +118,8 @@ public class CanvasTools : MonoBehaviour
             DisableButton("Circle");
             EnableButton("Square");
         });
+
+       
       
 
     }
@@ -154,9 +153,7 @@ public class CanvasTools : MonoBehaviour
         if(button == "Bucket"){
             BucketFill.interactable = false;
         }
-        if(button == "Picker"){
-            Picker.interactable = false;
-        }
+      
 
 
        
@@ -183,9 +180,7 @@ public class CanvasTools : MonoBehaviour
         if(button == "Bucket"){
             BucketFill.interactable = true;
         }
-        if(button == "Picker"){
-            Picker.interactable = true;
-        }
+        
       
     }
 
@@ -216,6 +211,7 @@ public class CanvasTools : MonoBehaviour
             Vector2 pixelCoordinates = PixelArtDrawingSystem.Instance.GetColorUV();
             pixelCoordinates.x *= colorsTexture.width;
             pixelCoordinates.y *= colorsTexture.height;
+            /*
             if(colorButton=="SelectedColor"){
                     selectedColorImage.color = colorsTexture.GetPixel((int)pixelCoordinates.x, (int)pixelCoordinates.y);
                     
@@ -224,27 +220,31 @@ public class CanvasTools : MonoBehaviour
                 selectedColor1Image.color = colorsTexture.GetPixel((int)pixelCoordinates.x, (int)pixelCoordinates.y);
                 
             }
+            */
+             selectedColorImage.color = colorsTexture.GetPixel((int)pixelCoordinates.x, (int)pixelCoordinates.y);
         }
     private void EnableButton(){
+         selectedColorImage.enabled = true;
         BucketFill.gameObject.SetActive(true);
         Pen.gameObject.SetActive(true);
         Eraser.gameObject.SetActive(true);
         PenSquare.gameObject.SetActive(true);
         PenCircle.gameObject.SetActive(true);
-        Picker.gameObject.SetActive(true);
-        SelectedColor.gameObject.SetActive(true);
-        SelectedColor1.gameObject.SetActive(true);
+
+        //SelectedColor.gameObject.SetActive(true);
+        //SelectedColor1.gameObject.SetActive(true);
         penBox.gameObject.SetActive(true);
     }
     private void DisableButton(){
+         selectedColorImage.enabled = false;
         BucketFill.gameObject.SetActive(false);
         Pen.gameObject.SetActive(false);
         Eraser.gameObject.SetActive(false);
         PenSquare.gameObject.SetActive(false);
         PenCircle.gameObject.SetActive(false);
-        Picker.gameObject.SetActive(false);
-        SelectedColor.gameObject.SetActive(false);
-        SelectedColor1.gameObject.SetActive(false);
+        //Picker.gameObject.SetActive(false);
+        //SelectedColor.gameObject.SetActive(false);
+        //SelectedColor1.gameObject.SetActive(false);
         penBox.gameObject.SetActive(false);
     }
     

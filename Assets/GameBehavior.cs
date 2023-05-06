@@ -106,17 +106,19 @@ public class GameBehavior : NetworkBehaviour
         
         //pick a new secret word
         secretWord = newWord; 
-        WordToDrawText.text = "Draw a "+ secretWord;
+        
         PlayerList.Instance.setGuessedCorrect(false);
         
         // choose a new artist
         if(RelayManager.Instance.getClientId() == m_Players[newIndex]){
             PlayerList.Instance.setIsArtist(true);
-            WordToDrawText.gameObject.SetActive(true);
+            WordToDrawText.text = "Draw a "+ secretWord;
+            //WordToDrawText.gameObject.SetActive(true);
 
         }else{
             PlayerList.Instance.setIsArtist(false);
-            WordToDrawText.gameObject.SetActive(false);
+            //WordToDrawText.gameObject.SetActive(false);
+             WordToDrawText.text = "You're the guesser!";
         }
 
         // clear the drawing board
