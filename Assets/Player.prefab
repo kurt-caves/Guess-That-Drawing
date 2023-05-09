@@ -888,7 +888,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.0152034275}
   m_AnchorMax: {x: 0.88000005, y: 0.045558885}
-  m_AnchoredPosition: {x: 12.000015, y: -4.0045166}
+  m_AnchoredPosition: {x: 12.000114, y: -4.0044556}
   m_SizeDelta: {x: 24, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &2887071354484719356
@@ -1118,6 +1118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colorsTexture: {fileID: 2800000, guid: dcdac53bc1142eb4bb10b2e5d75b642f, type: 3}
   selectedColorImage: {fileID: 9053748734200379943}
+  toolBoxImage: {fileID: 5321378049790950971}
   BucketFill: {fileID: 2177317786395016892}
   Pen: {fileID: 6533089961886235558}
   Eraser: {fileID: 7247971160149254093}
@@ -1809,8 +1810,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1980,7 +1981,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.90000004, y: 1}
-  m_AnchoredPosition: {x: 10.000145, y: 0}
+  m_AnchoredPosition: {x: 9.999797, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &8170179012181031068
@@ -2883,7 +2884,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1136488642418574518}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3180,11 +3181,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   username: 
   maxMessages: 25
+  playerMessage: {r: 0.008677486, g: 0.009046939, b: 0.009433985, a: 1}
+  info: {r: 0.031016383, g: 0.38679248, b: 0.03351783, a: 1}
   chatPanel: {fileID: 1024485509458571837}
   textObject: {fileID: 6159022145441803469, guid: 14bf4c429459ab5bfae0bcf50630813e, type: 3}
   chatBox: {fileID: 418383876817849595}
-  playerMessage: {r: 0.008677486, g: 0.009046939, b: 0.009433985, a: 1}
-  info: {r: 0.09544941, g: 0.5754717, b: 0.035288375, a: 1}
 --- !u!114 &1438750986098855250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3348,8 +3349,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1568434928085394387}
   m_HandleRect: {fileID: 3586607078783445404}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 0.9999998
+  m_Value: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3512,7 +3513,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1346135453434417710}
   m_HandleRect: {fileID: 1260692150654090941}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -4398,8 +4399,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
