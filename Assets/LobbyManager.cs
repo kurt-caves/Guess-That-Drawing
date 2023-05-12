@@ -22,7 +22,7 @@ public class LobbyManager : MonoBehaviour {
    
     
     private int lobbyCount = 0;
-    private int minPlayers =  3;
+    private int minPlayers =  1;
     private int maxPlayers = 6;
     
     public event EventHandler OnLeftLobby;

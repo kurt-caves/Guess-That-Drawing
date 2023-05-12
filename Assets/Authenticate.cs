@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /*
+    Authenticate
+
     Allows player to sign in after entering a user name
 */
 public class Authenticate : MonoBehaviour {
@@ -41,6 +43,7 @@ public class Authenticate : MonoBehaviour {
 
         nameBox.characterLimit = maxNameLength;
        
+        // sets username and authenticates the player when the "autheticate" button is clicked
         AuthenticateButton.onClick.AddListener(() => {
             setUserName();
             LobbyManager.Instance.Authenticate(GetPlayerName());
@@ -78,6 +81,7 @@ public class Authenticate : MonoBehaviour {
        AuthenticateButton.interactable = true;
     }
 
+    // sets userName to value in text box
     public void setUserName(){
         
         playerName = nameBox.text;

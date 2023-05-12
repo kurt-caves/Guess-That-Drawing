@@ -4,18 +4,24 @@ using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
 
+/*
+ 
+    PlayerList
+
+    Sets and displays relevant information about each player including: username, 
+    points, and whether the user is a guesser or artist.
+
+*/
 public class PlayerList : NetworkBehaviour
 {
 
     
     [SerializeField] private GameObject playerPanel, textObject;
+    
+    [SerializeField] List<PlayerObj> playerList = new List<PlayerObj>();
 
     public static PlayerList Instance { get; private set; }
 
-    [SerializeField] List<PlayerObj> playerList = new List<PlayerObj>();
-
- 
-    
     private int points;
     private string username;
     private ulong clientId;
@@ -63,17 +69,6 @@ public class PlayerList : NetworkBehaviour
 
         
     }
-/*
-    public void AddList()
-    {
-        
-        AddPlayerServerRpc(username, NetworkManager.Singleton.LocalClientId);
-       
-                
-    }
-
-*/
-
 
     [ClientRpc]
     private void ReceivePlayerUpdateClientRpc(string name, int points, bool isArtist, ulong senderPlayerId) {
@@ -86,6 +81,10 @@ public class PlayerList : NetworkBehaviour
         ReceivePlayerUpdateClientRpc(name, points, isArtist,  senderPlayerId);
     }
 
+
+    /*
+        Displays the name, number of points, and role of each player (artist or guesser)
+    */
     private void UpdatePlayer(string name, int points, bool isArtist, ulong senderPlayerId) {
         
         PlayerObj newPlayer = new PlayerObj();
@@ -95,58 +94,19 @@ public class PlayerList : NetworkBehaviour
         }else{
             newPlayer.text = name + " (guesser) " + points;
         }
-      
-       
-
-        GameObject  newText = Instantiate(textObject, playerPanel.transform);
-        newPlayer.textObject = newText.GetComponent<TMPro.TextMeshProUGUI>();
-        newPlayer.textObject.text = newPlayer.text;
-       
-        playerList.Add(newPlayer);
-
-
-       
-        
-    }
-    /*
-    [ClientRpc]
-    private void ReceivePlayerAddClientRpc(string name, ulong senderPlayerId) {
-        AddPlayer(name,  senderPlayerId);
-        
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void AddPlayerServerRpc(string name, ulong senderPlayerId) {
-        ReceivePlayerAddClientRpc(name,  senderPlayerId);
-    }
-
-    private void AddPlayer(string name, ulong senderPlayerId) {
-        
-        PlayerObj newPlayer = new PlayerObj();
-       
-        newPlayer.text = name;
-      
-       
-
-        GameObject  newText = Instantiate(textObject, playerPanel.transform);
-        newPlayer.textObject = newText.GetComponent<TMPro.TextMeshProUGUI>();
-        newPlayer.textObject.text = newPlayer.text;
-       
-        playerList.Add(newPlayer);
-       
-        
-    }
-    */
-
-
     
+        GameObject  newText = Instantiate(textObject, playerPanel.transform);
+        newPlayer.textObject = newText.GetComponent<TMPro.TextMeshProUGUI>();
+        newPlayer.textObject.text = newPlayer.text;
+       
+        playerList.Add(newPlayer);
+  
+    }
+  
 
-   
 }
 
 
-
-//[System.Serializable]
 public class PlayerObj
 {
     public string text;

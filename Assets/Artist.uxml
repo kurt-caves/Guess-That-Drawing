@@ -1,8 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="container" style="flex-grow: 1; background-color: rgb(39, 164, 242);">
-        <ui:VisualElement name="canvas" style="width: 60%; height: 80%; top: 20px; left: 20%; background-color: rgb(255, 255, 255);" />
-        <ui:VisualElement name="players" style="position: absolute; top: 20px; width: 20%; height: 80%; background-color: rgb(255, 239, 239);" />
-        <ui:VisualElement name="chatbox" style="position: absolute; top: 20px; width: 20%; height: 80%; background-color: rgb(255, 239, 239); left: 80%;" />
-        <ui:VisualElement name="toolbox" style="bottom: 1%; top: auto; width: 100%; height: 10%; background-color: rgb(113, 113, 113);" />
-    </ui:VisualElement>
-</ui:UXML>

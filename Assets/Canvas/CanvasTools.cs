@@ -4,18 +4,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+    CanvasTools
+
+    Controls the GUI for the drawing board tool box
+*/
 public class CanvasTools : MonoBehaviour
 {
     public static CanvasTools Instance { get; private set; }
 
-
     [SerializeField] private Texture2D colorsTexture;
-
 
     [SerializeField] private Image selectedColorImage;
     [SerializeField] private Image  toolBoxImage;
    
- 
     [SerializeField] private Button BucketFill;
     [SerializeField] private Button Pen;
     [SerializeField] private Button Eraser;
@@ -28,19 +30,19 @@ public class CanvasTools : MonoBehaviour
 
     
     private void Start() {
-            PixelArtDrawingSystem.Instance.OnColorChanged += PixelArtDrawingSystem_OnColorChanged;
-            GameBehavior.Instance.OnTookTurn += UpdateVisibility_Event;
+        PixelArtDrawingSystem.Instance.OnColorChanged += PixelArtDrawingSystem_OnColorChanged;
+        GameBehavior.Instance.OnTookTurn += UpdateVisibility_Event;
 
-            UpdateSelectedColor();
-        }
+        UpdateSelectedColor();
+    }
 
     private void Awake() {
         
         Instance = this;
 
+        // sets slider range
         penBox.minValue = 1;
         penBox.maxValue = 9;
-
         penBox.value = 4;
 
       
@@ -83,15 +85,11 @@ public class CanvasTools : MonoBehaviour
         });
 
        
-      
         DisableButton();
     }
+
     private void Update() {
-        
-        
         PixelArtDrawingSystem.Instance.SetPenSizeInt((int) penBox.value);
-        
-        
     }
 
     public void DisableButton (string button) {
@@ -111,11 +109,9 @@ public class CanvasTools : MonoBehaviour
         if(button == "Bucket"){
             BucketFill.interactable = false;
         }
-      
-
-
-       
+ 
     }
+
     public void EnableButton (string button) {
      
         if(button == "Square"){
@@ -133,15 +129,14 @@ public class CanvasTools : MonoBehaviour
         if(button == "Bucket"){
             BucketFill.interactable = true;
         }
-        
-      
+
     }
 
 
 
-           private void UpdateVisibility_Event(object sender, EventArgs e) {
-            UpdateVisibility();
-        }
+    private void UpdateVisibility_Event(object sender, EventArgs e) {
+        UpdateVisibility();
+    }
 
        
        
@@ -155,18 +150,19 @@ public class CanvasTools : MonoBehaviour
             }
         }
 
-        private void PixelArtDrawingSystem_OnColorChanged(object sender, System.EventArgs e) {
-            UpdateSelectedColor();
-        }
+    private void PixelArtDrawingSystem_OnColorChanged(object sender, System.EventArgs e) {
+        UpdateSelectedColor();
+    }
 
-        private void UpdateSelectedColor() {
+    private void UpdateSelectedColor() {
             
-            Vector2 pixelCoordinates = PixelArtDrawingSystem.Instance.GetColorUV();
-            pixelCoordinates.x *= colorsTexture.width;
-            pixelCoordinates.y *= colorsTexture.height;
+        Vector2 pixelCoordinates = PixelArtDrawingSystem.Instance.GetColorUV();
+        pixelCoordinates.x *= colorsTexture.width;
+        pixelCoordinates.y *= colorsTexture.height;
           
-             selectedColorImage.color = colorsTexture.GetPixel((int)pixelCoordinates.x, (int)pixelCoordinates.y);
-        }
+        selectedColorImage.color = colorsTexture.GetPixel((int)pixelCoordinates.x, (int)pixelCoordinates.y);
+    }
+    
     private void EnableButton(){
         selectedColorImage.enabled = true;
         BucketFill.gameObject.SetActive(true);
@@ -178,6 +174,7 @@ public class CanvasTools : MonoBehaviour
 
         penBox.gameObject.SetActive(true);
     }
+    
     private void DisableButton(){
         selectedColorImage.enabled = false;
         BucketFill.gameObject.SetActive(false);

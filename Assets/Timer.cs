@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/*
+    Timer
+
+    Controls the behavior of the timer
+*/
 public class Timer : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI timeLeftText;
@@ -12,8 +17,8 @@ public class Timer : MonoBehaviour
     
     private float timeElapsed;
     public float timerDuration; // timer duration in seconds
-    // Start is called before the first frame update
-    
+   
+
     public static Timer Instance { get; private set; }
 
     public void Awake(){
@@ -21,7 +26,9 @@ public class Timer : MonoBehaviour
        
     }
 
-
+    /*
+        Starts a 60 second timer
+    */
     public void StartTimer()
     {
         timeElapsed = 0;
@@ -30,8 +37,11 @@ public class Timer : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    
+   
+    /*
+        Displays a decrementing timer unitil 60 seconds is up. Then, calls TakeTurn() to make another
+        player the artist. 
+    */
     void Update()
     {
         if(timerOn){
@@ -51,13 +61,8 @@ public class Timer : MonoBehaviour
     }
 
     /*
-    void OnGUI()
-    {
-        float timeRemaining = timerDuration - timeElapsed;
-        string timeText = string.Format("{0:0.00}", timeRemaining);
-        GUI.Label(new Rect(10, 10, 100, 20), "Time: " + timeText);
-    }
-*/
+        Helper method to display timer
+    */
     void UpdateTimer(){
         float timeRemaining = timerDuration - timeElapsed;
         string timeText = string.Format("{0:0.00}", timeRemaining);

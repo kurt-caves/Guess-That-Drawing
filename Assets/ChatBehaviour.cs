@@ -103,13 +103,7 @@ public class ChatBehaviour : NetworkBehaviour
                 if(!chatBox.isFocused && Input.GetKeyDown(KeyCode.Return) )
                     chatBox.ActivateInputField();
             }
-            if(!chatBox.isFocused)
-            {
-                if(Input.GetKeyDown(KeyCode.Space)){
-                // SendChatMessageServerRpc("You pressed the space key!", Message.MessageType.info, NetworkManager.Singleton.LocalClientId);
-                //  Debug.Log("Space");
-                }
-            }
+           
 
         }
 

@@ -1,6 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/frontpage.uss?fileID=7433441132597879392&amp;guid=138c60918650132c48f127d1bca92c36&amp;type=3#frontpage" />
-    <ui:VisualElement name="container" style="flex-grow: 1; align-items: center; justify-content: space-around; background-image: url(&apos;project://database/Assets/Guess%20That%20Drawing.png?fileID=2800000&amp;guid=2b13e1f79a4ae3e7992eb4623fcc18d5&amp;type=3#Guess That Drawing&apos;);">
-        <ui:Button text="Play" display-tooltip-when-elided="true" name="fpButton" style="font-size: 35px; background-color: rgb(242, 92, 5); width: 280px; height: 80px; border-top-left-radius: 12px; border-bottom-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px;" />
-    </ui:VisualElement>
-</ui:UXML>

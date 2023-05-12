@@ -7,15 +7,16 @@ using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+    LobbyWaitingRoom
+
+    Controls the GUI for the lobby waiting room
+*/
 public class LobbyWaitingRoom : MonoBehaviour {
 
 
     public static LobbyWaitingRoom Instance { get; private set; }
 
-
-    
-    //[SerializeField] private Transform container;
-    //[SerializeField] private TextMeshProUGUI lobbyNameText;
     [SerializeField] private TextMeshProUGUI playerCountText;
     [SerializeField] private TextMeshProUGUI lobbyNameText;
     [SerializeField] private Button leaveButton;
@@ -26,8 +27,7 @@ public class LobbyWaitingRoom : MonoBehaviour {
     private void Awake() {
         Instance = this;
 
-      //  playerSingleTemplate.gameObject.SetActive(false);
-
+        // click to leave the lobby
         leaveButton.onClick.AddListener(() => {
             LobbyManager.Instance.LeaveLobby();
             Hide();
@@ -35,6 +35,7 @@ public class LobbyWaitingRoom : MonoBehaviour {
 
         });
 
+        // click to start the game
         StartButton.onClick.AddListener(() => {
             LobbyManager.Instance.StartGame();
             Hide();
@@ -45,8 +46,6 @@ public class LobbyWaitingRoom : MonoBehaviour {
         LobbyManager.Instance.OnJoinedLobby += UpdateLobby_Event;
         LobbyManager.Instance.OnJoinedLobbyUpdate += UpdateLobby_Event;
        
-        
-
         Hide();
     }
 
@@ -59,34 +58,40 @@ public class LobbyWaitingRoom : MonoBehaviour {
         UpdateLobby(LobbyManager.Instance.GetJoinedLobby());
     }
 
+    /*
+        Makes the "start game" button visible to the lobby host.
+        Displays the name of the lobby and the number of players in it.
+        Runs everytime someone joins or leaves the lobby.
+    */
     private void UpdateLobby(Lobby lobby) {
+        
+        // hide waiting room if game already started
         if(RelayManager.Instance.getInGame() == true){
             Hide();
-            InGame.Instance.Show();
         }
         
         if(lobby != null){
 
+            // can't start the game until minimum number of players joined
             if(lobby.Players.Count < LobbyManager.Instance.GetMinPlayers()){
                 DisableButton();
             }else{
                 EnableButton();
             }
 
+            // only host can start the game
             if(lobby.HostId == AuthenticationService.Instance.PlayerId){
                 StartButton.gameObject.SetActive(true);
             }else{
                 StartButton.gameObject.SetActive(false);
             }
 
+            // display lobby name and number of players
             lobbyNameText.text = "Lobby Name: " + lobby.Name;
             playerCountText.text = lobby.Players.Count + "/"+ + LobbyManager.Instance.GetMinPlayers() + " players needed";
 
         }
-        
-
-        
-     
+  
     }
 
 

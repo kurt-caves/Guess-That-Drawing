@@ -99,7 +99,7 @@ public class GameBehavior : NetworkBehaviour
                 newIndex = 0;
                 
             }
-            string newWord = WordBank.Instance.GetRandomWord("easy");
+            string newWord = WordBank.Instance.GetRandomWord();
             UpdateTurnServerRpc(newIndex, newWord, NetworkManager.Singleton.LocalClientId);
         }
          
