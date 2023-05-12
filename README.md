@@ -26,3 +26,14 @@ We added a paint bucket feature to our drawing board.
 # changes till 5.12.2023:
 Currently, our project  functions as a simple drawing and guessing game. We modified the drawing board to be multiplayer, and added several features including a color picker and a pen tool. We also added a mechanism for taking turns, and awarding points for guessing correctly. Additionally, we  updated our program so only the artist is allowed to use the drawing board, and only the guessers are allowed to type in the chat box. 
 
+# Future works:
+At this level, the drawer accesses to just one word for drawing. You can change the functionality that drawer has a chance to select one of three words. Also
+you can have a word bank contains three categories(Easy, Medium and Hard)and some sub-categories for each one, and have an option to choose on of theses 
+sub-categories. 
+
+You can add another waiting room that is located before starting to draw. That gives some seconds to the drawer to think about how draws the word.
+
+You can also change the scoring system to have a dynamic scoring system. Each player who guess sooner gets more credit. That makes the game be more competitive.
+
+One option you can add to the game is time settings. The time of the each round can ghange by the difficaulty of the word that the drawer chooses. If The
+drawer chooses a hard word, time is set on for example 120 seconds.
