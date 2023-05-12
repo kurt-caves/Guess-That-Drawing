@@ -1,4 +1,4 @@
-<p>Design.html</p>
+<h1>Design.html</h1>
 <h2>****Notice of Future Work****</h2>
 <p>To keep in the integrity of our documentation this notice is posted for the design features that we were unable to achieve and have been left for future work.</p>
 <ul>
@@ -21,11 +21,15 @@ The database is responsible for storing important information, such as user acco
 <br><br>
 Overall, this architecture allows for communication and data storage to be centralized and managed by the game server.
 <br><br>
-The major class's PixelArtDrawingSystem, PixelArtDrawingSystemVisual, TestLobby, RelayManager, ChatManager, and WordBank.
-<br>
-The "TestLobby" and "RelayManager" are classes used to construct the lobby. "TestLobby" holds variables, handles button inputs and pairs users into lobby's and "RelayManager" allows users to connect to the lobby's securely without a dedicated server.
-<br>
-The "WordBank" and "ChatManager" are classes used to construct the game room. "WordBank" Class stores and sorts words for other classes to call and receive and "ChatManager" Class handles inputs and updates of the chat box.
-<br>
-The "PixelArtDrawingSystem" and "PixelArtDrawingSystemVisual" are classes used to construct the canvas. "PixelArtDrawingSystem" initializes the canvas and "PixelArtDrawingSystemVisual" Class apply updates made from the "PixelArtDrawingSystem" onto the mesh to display the canvas.
+
+<h2> Major Classes </h2>
+The major classes are: PixelArtDrawingSystem, PixelArtDrawingSystemVisual, LobbyManager, RelayManager, ChatManager, and GameBehavior.
+<br><br>
+LobbyManager and RelayManager are classes used to handle the networking. LobbyManager allows users to connect before the game starts,  while RelayManager allows users to send/receive information in real-time during the game without a dedicated server.
+<br><br>
+GameBehavior is used to handle the mechanics of the game by allowing players to take turns guessing/drawing. GameBehavior relies on WordBank to generate a secret word, and calls the PlayerList methods to update each player's score and status as an artist/guesser.
+<br><br>
+ChatManager is used to control the behavior of the multiplayer chatbox.
+<br><br>
+PixelArtDrawingSystem and PixelArtDrawingSystemVisual are classes used to construct the canvas. PixelArtDrawingSystem initializes the canvas and PixelArtDrawingSystemVisual applies updates made from PixelArtDrawingSystem onto the mesh to display the canvas.
 </p>

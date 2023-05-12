@@ -2,20 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+    /*
+        PixelArtDrawingSystemVisual
 
-
+        Applies updates made from the "PixelArtDrawingSystem" onto the mesh to display the canvas.
+    */
     public class PixelArtDrawingSystemVisual : MonoBehaviour {
 
         [SerializeField] private  PixelArtDrawingSystem drawPixels;
 
-        public static  PixelArtDrawingSystemVisual Instance { get; private set; } //added
+        public static  PixelArtDrawingSystemVisual Instance { get; private set; }
 
         private Grid< PixelArtDrawingSystem.GridObject> grid;
         private Mesh mesh;
         private bool updateMesh;
 
         private void Awake() {
-            Instance = this; //added
+            Instance = this; 
             mesh = new Mesh();
             GetComponent<MeshFilter>().mesh = mesh;
         }
